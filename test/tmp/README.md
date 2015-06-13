@@ -1,0 +1,1 @@
+This directory is used during unit tests to write files in.

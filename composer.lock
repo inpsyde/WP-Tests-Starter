@@ -1,0 +1,103 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "5782d8a82ceca6e18047bea1b08d9796",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "dnaber/requisite",
+            "version": "0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dnaber-de/Requisite.git",
+                "reference": "48915d71eb40c036481054da14584b8733aa031c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dnaber-de/Requisite/zipball/48915d71eb40c036481054da14584b8733aa031c",
+                "reference": "48915d71eb40c036481054da14584b8733aa031c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Requisite\\": "src/Requisite"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Naber",
+                    "email": "kontakt@dnaber.de",
+                    "homepage": "http://dnaber.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A modular and extendable SPL Autoloader.",
+            "homepage": "https://github.com/dnaber-de/Requisite",
+            "keywords": [
+                "autoload",
+                "spl"
+            ],
+            "time": "2015-04-21 18:37:22"
+        },
+        {
+            "name": "inpsyde/wordpress-dev",
+            "version": "4.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inpsyde/wordpress-dev.git",
+                "reference": "b86ff02a0cad98ac8e5eaba539db433707e3b9ab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/b86ff02a0cad98ac8e5eaba539db433707e3b9ab",
+                "reference": "b86ff02a0cad98ac8e5eaba539db433707e3b9ab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "wordpress-core",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "WordPress Community",
+                    "homepage": "http://wordpress.org/about/"
+                }
+            ],
+            "description": "WordPress is web software you can use to create a beautiful website or blog.",
+            "homepage": "http://wordpress.org/",
+            "keywords": [
+                "blog",
+                "cms",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "http://core.trac.wordpress.org/",
+                "forum": "http://wordpress.org/support/",
+                "wiki": "http://codex.wordpress.org/",
+                "irc": "irc://irc.freenode.net/wordpress",
+                "source": "http://core.trac.wordpress.org/browser"
+            },
+            "time": "2015-06-13 08:46:50"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "platform": [],
+    "platform-dev": []
+}

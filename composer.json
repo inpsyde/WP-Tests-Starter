@@ -1,0 +1,19 @@
+{
+	"name" : "inpsyde/wp-tests-starter",
+	"description" : "A package that helps you setting up WordPress test environment quickly.",
+	"keywords" : [ "WordPress", "Tests" ],
+	"licence" :"MIT",
+	"suggest" : {
+		"inpsyde/wordpress-dev" : "WordPress development composer package."
+	},
+	"require-dev" : {
+		"inpsyde/wordpress-dev" : "~4.2",
+		"dnaber/requisite" : "~0.9"
+	},
+	"repositories" : [
+		{
+			"type" : "vcs",
+			"url" : "https://github.com/inpsyde/wordpress-dev"
+		}
+	]
+}
