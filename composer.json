@@ -9,5 +9,10 @@
 	"require-dev" : {
 		"inpsyde/wordpress-dev" : "~4.2",
 		"dnaber/requisite" : "~0.9"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"WpTestsStarter\\" : "src/WpTestsStarter"
+		}
 	}
 }

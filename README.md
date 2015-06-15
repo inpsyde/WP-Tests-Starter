@@ -24,6 +24,9 @@ In your phpunit testing bootstrap file use the starter like this:
 ```php
 use WpTestsStarter\WpTestsStarter;
 
+// The composer autoloader
+require_once 'vendor/autoload.php';
+
 // The full path to the wordpress package
 $starter = new WpTestsStarter( '/path/to/your-project/vendor/inpsyde/wordpress-dev' );
 
