@@ -99,17 +99,6 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testBootstrap() {
 
-		$configFile = self::$baseDir . '/wp-tests-config.php';
-		/**
-		 * Todo: Find out why this throws a 'Headers already sent' error
-		 *
-		 * wp-tests-starter/vendor/inpsyde/wordpress-dev/src/wp-includes/pluggable.php:1196
-		 * wp-tests-starter/vendor/inpsyde/wordpress-dev/src/wp-includes/load.php:483
-		 * wp-tests-starter/vendor/inpsyde/wordpress-dev/src/wp-settings.php:109
-		 * wp-tests-starter/vendor/inpsyde/wordpress-dev/tests/phpunit/includes/bootstrap.php:85
-		 * wp-tests-starter/src/WpTestsStarter/WpTestsStarter.php:56
-		 * wp-tests-starter/test/Integration/WpTestsStarterTest.php:58
-		 */
 		self::$testee->bootstrap();
 
 		// test if the environment is available
