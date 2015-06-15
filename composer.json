@@ -9,11 +9,5 @@
 	"require-dev" : {
 		"inpsyde/wordpress-dev" : "~4.2",
 		"dnaber/requisite" : "~0.9"
-	},
-	"repositories" : [
-		{
-			"type" : "vcs",
-			"url" : "https://github.com/inpsyde/wordpress-dev"
-		}
-	]
+	}
 }
