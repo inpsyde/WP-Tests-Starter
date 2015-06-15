@@ -15,6 +15,13 @@ class WpTestsStarter {
 	private $saltGenerator;
 
 	/**
+	 * list of all by this class defined constants
+	 *
+	 * @type array
+	 */
+	private $definedConstants = array();
+
+	/**
 	 * Pass the absolute path of the wordpress-dev package here.
 	 * It is "$baseDir/vendor/inpsyde/wordpress-dev" if you're using
 	 * the inpsyde/wordpress-dev package
@@ -68,6 +75,7 @@ class WpTestsStarter {
 		if ( defined( $const ) )
 			return FALSE;
 
+		$this->definedConstants[ $const ] = $value;
 		return define( $const, $value );
 	}
 
@@ -244,21 +252,64 @@ class WpTestsStarter {
 	public function createDummyConfigFile() {
 
 		$configFile = $this->baseDir . '/wp-tests-config.php';
-		if ( file_exists( $configFile ) )
-			return;
-
-		touch( $configFile );
+		if ( ! file_exists( $configFile ) )
+			touch( $configFile );
 
 		/**
-		 * whe have to define $table_prefix as global here
-		 * otherwise it is not defined in the scope of
-		 * tests/phpunit/includes/bootstrap.php of the WordPress package
+		 * the WordPress testing bootstrap requires the definitions
+		 * of all these content in exactly this file, there's no way
+		 * to dynamically define these constants as
+		 * tests/phpunit/includes/bootstrap.php triggers a system() call to
+		 * tests/phpunit/includes/install.php with a static path to the
+		 * config file
 		 */
-		$content = <<<'PHP'
+		$constantsDefinition = $this->getDefinedConstantsCode();
+		$content = <<<PHP
 <?php
-global $table_prefix;
+global \$table_prefix;
+\$GLOBALS[ 'table_prefix' ] = "{$GLOBALS[ 'table_prefix' ]}";
+{$constantsDefinition}
 PHP;
 		file_put_contents( $configFile, $content, LOCK_EX );
 
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDefinedConstants() {
+
+		return $this->definedConstants;
+	}
+
+	/**
+	 * that feels so ugly
+	 */
+	public function getDefinedConstantsCode() {
+
+		$code = '';
+		foreach ( $this->definedConstants as $constant => $value ) {
+			$constant = $this->escapePhpString( $constant );
+			$value     = $this->escapePhpString( $value );
+			$code .= "if ( ! defined( '{$constant}' ) )\n";
+			$code .= "\tdefine( '{$constant}', '{$value}' );\n";
+		}
+
+		return $code;
+	}
+
+	/**
+	 * that feels even more ugly
+	 */
+	public function escapePhpString( $value ) {
+
+		$value = str_replace(
+			array( '<?php', '<?', '?>' ),
+			'',
+			$value
+		);
+		$value = addcslashes( $value, "'\\" );
+
+		return $value;
 	}
 }

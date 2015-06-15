@@ -16,31 +16,37 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @type string
 	 */
-	private $baseDir;
+	private static $baseDir;
 
 	/**
 	 * @type WpTestsStarter
 	 */
-	private $testee;
+	private static $testee;
 
 	/**
 	 * runs before each test
 	 */
-	public function setUp() {
+	public static function setUpBeforeClass() {
 
-
-		$this->baseDir = dirname( dirname( __DIR__ ) ) . '/vendor/inpsyde/wordpress-dev';
-		$this->testee = new WpTestsStarter( $this->baseDir );
+		self::$baseDir = dirname( dirname( __DIR__ ) ) . '/vendor/inpsyde/wordpress-dev';
+		self::$testee = new WpTestsStarter( self::$baseDir );
 
 		// defined in phpunit-integration.xml
-		$this->testee->defineDbName( Db\NAME );
-		$this->testee->defineDbUser( Db\USER );
-		$this->testee->defineDbPassword( Db\PASSWORD );
-		$this->testee->defineDbHost( Db\HOST );
-		$this->testee->defineDbCharset( Db\CHARSET );
-		$this->testee->defineDbCollate( Db\COLLATE );
-		$this->testee->setTablePrefix( Db\TABLE_PREFIX );
+		self::$testee->defineDbName( Db\NAME );
+		self::$testee->defineDbUser( Db\USER );
+		self::$testee->defineDbPassword( Db\PASSWORD );
+		self::$testee->defineDbHost( Db\HOST );
+		self::$testee->defineDbCharset( Db\CHARSET );
+		self::$testee->defineDbCollate( Db\COLLATE );
+		self::$testee->setTablePrefix( Db\TABLE_PREFIX );
 
+		self::$testee->defineAbspath();
+		self::$testee->definePhpBinary();
+		self::$testee->defineWpLang();
+		self::$testee->defineWpDebug();
+		self::$testee->defineTestsDomain();
+		self::$testee->defineTestsEmail();
+		self::$testee->defineTestsTitle();
 	}
 
 	public function testSetUp() {
@@ -48,6 +54,44 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertNotEmpty( \DB_NAME );
 		$this->assertNotEmpty( \DB_USER );
 		$this->assertNotEmpty( $GLOBALS[ 'table_prefix' ] );
+		$definedConstants = self::$testee->getDefinedConstants();
+		$this->assertArrayHasKey( 'DB_NAME', $definedConstants );
+		$this->assertArrayHasKey( 'DB_USER', $definedConstants );
+	}
+
+	/**
+	 * @see WpTestsStarter::createDummyConfigFile()
+	 */
+	public function testCreateDummyConfigFile() {
+
+		$configFile = self::$baseDir . '/wp-tests-config.php';
+		if ( file_exists( $configFile ) )
+			unlink( $configFile );
+
+		self::$testee->createDummyConfigFile();
+		$fileContent = file_get_contents( $configFile );
+
+		$this->assertStringEndsWith(
+			self::$testee->getDefinedConstantsCode(),
+			$fileContent
+		);
+
+		$definedPhpConstants = get_defined_constants();
+		$definedConstants = self::$testee->getDefinedConstants();
+		foreach ( $definedConstants as $name => $value ) {
+
+			$pattern = sprintf(
+				"~define\(\s*'%s',\s*'%s'\s*\);~",
+				preg_quote( self::$testee->escapePhpString( $name ) ),
+				preg_quote( self::$testee->escapePhpString( $value ) )
+			);
+			$this->assertRegExp(
+				$pattern,
+				$fileContent
+			);
+		}
+
+		unlink( $configFile );
 	}
 
 	/**
@@ -55,9 +99,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testBootstrap() {
 
-
-		$this->markTestSkipped( 'Under construction' );
-
+		$configFile = self::$baseDir . '/wp-tests-config.php';
 		/**
 		 * Todo: Find out why this throws a 'Headers already sent' error
 		 *
@@ -68,7 +110,33 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		 * wp-tests-starter/src/WpTestsStarter/WpTestsStarter.php:56
 		 * wp-tests-starter/test/Integration/WpTestsStarterTest.php:58
 		 */
-		$this->testee->bootstrap();
+		self::$testee->bootstrap();
+
+		// test if the environment is available
+		$this->assertTrue(
+			class_exists( '\WP_UnitTestCase' ),
+			'Class \WP_UnitTestCase does not exist.'
+		);
+
+		$this->assertInstanceOf(
+			'\wpdb',
+			$GLOBALS[ 'wpdb' ]
+		);
+
+		$dbTables =  $GLOBALS[ 'wpdb' ]->get_results(
+			'SHOW TABLES',
+			\ARRAY_N
+		);
+		$tablesFlat = array();
+		foreach ( $dbTables as $row ) {
+			$tablesFlat[] = $row[ 0 ];
+		}
+
+		$optionTable = Db\TABLE_PREFIX.'options';
+		$this->assertTrue(
+			in_array( $optionTable, $tablesFlat ),
+			"Table {$optionTable} does not exist!"
+		);
 	}
 }
  

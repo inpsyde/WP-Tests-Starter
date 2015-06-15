@@ -44,6 +44,54 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @see WpTestsStarter::getDefinedConstants()
+	 */
+	public function testGetDefinedConstants() {
+
+		$testee = new WpTestsStarter( '' );
+
+		$const = strtoupper( __FUNCTION__ );
+		$value = __METHOD__;
+		$testee->defineConst( $const, $value );
+
+		$definedConstants = $testee->getDefinedConstants();
+		$this->assertArrayHasKey(
+			$const,
+			$definedConstants
+		);
+		$this->assertEquals(
+			$value,
+			$definedConstants[ $const ]
+		);
+	}
+
+	public function testGetDefinedConstantsCode() {
+
+		$testee = new WpTestsStarter( '' );
+
+		$const = strtoupper( __FUNCTION__ );
+		$value = __METHOD__;
+		$testee->defineConst( $const, $value );
+
+		$definedConstantsCode = $testee->getDefinedConstantsCode();
+
+		$expectedConst = $testee->escapePhpString( $const );
+		$expectedValue = $testee->escapePhpString( $value );
+
+		$expectPattern = sprintf(
+			"~define\(\s*'%s',\s*'%s'\s*\);~",
+			preg_quote( $expectedConst ),
+			preg_quote( $expectedValue )
+		);
+
+		$this->assertRegExp(
+			$expectPattern,
+			$definedConstantsCode
+		);
+
+	}
+
+	/**
 	 * @see WpTestsStarter::defineAbspath()
 	 */
 	public function testDefineAbspath() {
@@ -171,6 +219,11 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		$configFile = $baseDir . '/wp-tests-config.php';
 		$testee = new WpTestsStarter( $baseDir );
 
+		$const = strtoupper( __FUNCTION__ );
+		$testee->defineConst( $const, 'FOO' );
+		$testee->defineConst( $const . '_1', 'FOO' );
+		$testee->defineConst( $const . '_2', 'FOO' );
+
 		if ( file_exists( $configFile ) )
 			unlink( $configFile );
 
@@ -182,6 +235,15 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		$testee->createDummyConfigFile();
 
 		$this->assertFileExists( $configFile );
+		$fileContent = file_get_contents( $configFile );
+
+		# count the number of definitions in the file
+		$replaceCount = 0;
+		str_replace( 'define(', 'define(', $fileContent, $replaceCount );
+		$this->assertEquals(
+			3,
+			$replaceCount
+		);
 
 		unlink( $configFile );
 	}
