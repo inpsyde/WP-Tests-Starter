@@ -227,6 +227,15 @@ class WpTestsStarter {
 	}
 
 	/**
+	 * @param string $dir
+	 */
+	public function defineWpPluginDir( $dir ) {
+
+		$dir = rtrim( $dir, '\\/' );
+		$this->defineConst( 'WP_PLUGIN_DIR', $dir );
+	}
+
+	/**
 	 * @param string $prefix
 	 */
 	public function setTablePrefix( $prefix = 'wptests_' ) {

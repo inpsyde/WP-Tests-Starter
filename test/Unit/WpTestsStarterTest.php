@@ -171,6 +171,23 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @see WpTestsStarter::defineWpPluginDir()
+	 */
+	public function testDefineWpPluginDir() {
+
+		$testee = new WpTestsStarter( '' );
+		$pluginDir = __DIR__;
+		$testee->defineWpPluginDir( $pluginDir );
+
+		$this->assertTrue(
+			defined( '\WP_PLUGIN_DIR' )
+		);
+		$this->assertSame(
+			$pluginDir,
+			\WP_PLUGIN_DIR		);
+	}
+
+	/**
 	 * @see WpTestsStarter::setGlobal()
 	 */
 	public function testSetGlobal() {
