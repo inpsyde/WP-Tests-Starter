@@ -4,52 +4,9 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4d483bd841d68218b89bcd6a7ce9d891",
+    "hash": "f96e91364418653200ce9a7bc5a6dfac",
     "packages": [],
     "packages-dev": [
-        {
-            "name": "dnaber/requisite",
-            "version": "0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dnaber-de/Requisite.git",
-                "reference": "48915d71eb40c036481054da14584b8733aa031c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dnaber-de/Requisite/zipball/48915d71eb40c036481054da14584b8733aa031c",
-                "reference": "48915d71eb40c036481054da14584b8733aa031c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Requisite\\": "src/Requisite"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Naber",
-                    "email": "kontakt@dnaber.de",
-                    "homepage": "http://dnaber.de",
-                    "role": "Developer"
-                }
-            ],
-            "description": "A modular and extendable SPL Autoloader.",
-            "homepage": "https://github.com/dnaber-de/Requisite",
-            "keywords": [
-                "autoload",
-                "spl"
-            ],
-            "time": "2015-04-21 18:37:22"
-        },
         {
             "name": "inpsyde/wordpress-dev",
             "version": "4.2.2",
@@ -98,6 +55,7 @@
     "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }

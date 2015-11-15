@@ -3,6 +3,9 @@
 namespace WpTestsStarter\Test;
 use Requisite;
 
+/**
+ * define your local bootstrap file if you want
+ */
 $localBootstrapFile = __DIR__ . '/bootstrap.php';
 if ( file_exists( $localBootstrapFile ) )
 	return require_once $localBootstrapFile;
@@ -12,11 +15,3 @@ $autoloadFile = $baseDir . '/vendor/autoload.php';
 
 if ( file_exists( $autoloadFile ) )
 	require_once $autoloadFile;
-
-$splLoader = new Requisite\SPLAutoLoader;
-$splLoader->addRule(
-	new Requisite\Rule\NamespaceDirectoryMapper(
-		$baseDir . '/src/WpTestsStarter',
-		'WpTestsStarter'
-	)
-);

@@ -7,8 +7,7 @@
 		"inpsyde/wordpress-dev" : "WordPress development composer package."
 	},
 	"require-dev" : {
-		"inpsyde/wordpress-dev" : "~4.2",
-		"dnaber/requisite" : "~0.9"
+		"inpsyde/wordpress-dev" : "~4.2"
 	},
 	"autoload" : {
 		"psr-4" : {
