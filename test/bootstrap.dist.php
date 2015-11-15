@@ -1,7 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
 namespace WpTestsStarter\Test;
-use Requisite;
 
 /**
  * define your local bootstrap file if you want
