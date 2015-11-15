@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e28c2fa806b488384a3340ef88a45721",
+    "hash": "4baf02671561c5d0a77bc7fa0ff6720a",
     "packages": [],
     "packages-dev": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "2e2b1ac0450eb8437108b8b02446ac115cfe241b"
+                "reference": "707f24cb56a85b02fdd902379478ce22386afd35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/2e2b1ac0450eb8437108b8b02446ac115cfe241b",
-                "reference": "2e2b1ac0450eb8437108b8b02446ac115cfe241b",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/707f24cb56a85b02fdd902379478ce22386afd35",
+                "reference": "707f24cb56a85b02fdd902379478ce22386afd35",
                 "shasum": ""
             },
             "require": {
@@ -42,7 +42,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2015-11-14 10:01:16"
+            "time": "2015-11-15 14:21:15"
         }
     ],
     "aliases": [],
@@ -52,6 +52,8 @@
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.3.0"
+    },
     "platform-dev": []
 }
