@@ -24,7 +24,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 	private static $testee;
 
 	/**
-	 * runs before each test
+	 * runs once before all the tests
 	 */
 	public static function setUpBeforeClass() {
 
