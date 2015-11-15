@@ -236,6 +236,28 @@ class WpTestsStarter {
 	}
 
 	/**
+	 * pass a plugin slug like 'directory/plugin-file.php'
+	 *
+	 * @param string $plugin
+	 */
+	public function setActivePlugin( $plugin ) {
+
+		if ( ! isset( $GLOBALS[ 'wp_tests_options' ] ) ) {
+			$GLOBALS[ 'wp_tests_options' ] = array();
+		}
+
+		if ( ! isset( $GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ] ) ) {
+			$GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ] = array();
+		}
+
+		if ( in_array( $plugin, $GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ] ) ) {
+			return;
+		}
+
+		$GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ][] = $plugin;
+	}
+
+	/**
 	 * @param string $prefix
 	 */
 	public function setTablePrefix( $prefix = 'wptests_' ) {

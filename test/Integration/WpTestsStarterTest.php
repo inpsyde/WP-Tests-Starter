@@ -47,6 +47,12 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		self::$testee->defineTestsDomain();
 		self::$testee->defineTestsEmail();
 		self::$testee->defineTestsTitle();
+
+		// test plugin loading
+		$plugin_test_dir = dirname( __DIR__ ) . '/tmp';
+		$test_plugin     = 'plugin/test-plugin.php';
+		self::$testee->defineWpPluginDir( $plugin_test_dir );
+		self::$testee->setActivePlugin( $test_plugin );
 	}
 
 	public function testSetUp() {
@@ -124,6 +130,21 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(
 			in_array( $optionTable, $tablesFlat ),
 			"Table {$optionTable} does not exist!"
+		);
+	}
+
+	/**
+	 * @see WpTestsStarter::setActivePlugin()
+	 * @depends testBootstrap
+	 */
+	public function testSetActivePlugin() {
+
+		/**
+		 * @see tmp/plugin/test-plugin.php
+		 */
+		$this->assertTrue(
+			defined( 'WP_TEST_STARTER_TEST_PLUGIN' ),
+			'Test plugin file seemed not loaded.'
 		);
 	}
 }

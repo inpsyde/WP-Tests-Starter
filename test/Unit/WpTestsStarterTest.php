@@ -187,6 +187,17 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 			\WP_PLUGIN_DIR		);
 	}
 
+	public function testActivatePlugin() {
+
+		$testee = new WpTestsStarter( '' );
+		$plugin = 'my/plugin.php';
+		$testee->setActivePlugin( $plugin );
+
+		$this->assertContains(
+			$plugin,
+			$GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ]
+		);
+	}
 	/**
 	 * @see WpTestsStarter::setGlobal()
 	 */
