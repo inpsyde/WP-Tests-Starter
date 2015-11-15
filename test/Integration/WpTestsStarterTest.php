@@ -76,7 +76,6 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
 			$fileContent
 		);
 
-		$definedPhpConstants = get_defined_constants();
 		$definedConstants = self::$testee->getDefinedConstants();
 		foreach ( $definedConstants as $name => $value ) {
 
