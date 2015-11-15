@@ -4,27 +4,28 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f96e91364418653200ce9a7bc5a6dfac",
+    "hash": "e28c2fa806b488384a3340ef88a45721",
     "packages": [],
     "packages-dev": [
         {
             "name": "inpsyde/wordpress-dev",
-            "version": "4.2.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "b86ff02a0cad98ac8e5eaba539db433707e3b9ab"
+                "reference": "2e2b1ac0450eb8437108b8b02446ac115cfe241b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/b86ff02a0cad98ac8e5eaba539db433707e3b9ab",
-                "reference": "b86ff02a0cad98ac8e5eaba539db433707e3b9ab",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/2e2b1ac0450eb8437108b8b02446ac115cfe241b",
+                "reference": "2e2b1ac0450eb8437108b8b02446ac115cfe241b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
             "type": "wordpress-core",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0+"
             ],
@@ -41,19 +42,14 @@
                 "cms",
                 "wordpress"
             ],
-            "support": {
-                "issues": "http://core.trac.wordpress.org/",
-                "forum": "http://wordpress.org/support/",
-                "wiki": "http://codex.wordpress.org/",
-                "irc": "irc://irc.freenode.net/wordpress",
-                "source": "http://core.trac.wordpress.org/browser"
-            },
-            "time": "2015-06-13 08:46:50"
+            "time": "2015-11-14 10:01:16"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "inpsyde/wordpress-dev": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
