@@ -1,27 +1,31 @@
 {
-	"name" : "inpsyde/wp-tests-starter",
-	"description" : "A package that helps you setting up WordPress test environment quickly.",
-	"keywords" : [ "WordPress", "Tests" ],
-	"licence" :"MIT",
-	"authors": [
-		{
-			"name": "David Naber",
-			"email": "d.naber@inpsyde.com",
-			"role": "Developer"
-		}
-	],
-	"suggest" : {
-		"inpsyde/wordpress-dev" : "WordPress development composer package."
-	},
-	"require" : {
-		"php" : ">=5.3.0"
-	},
-	"require-dev" : {
-		"inpsyde/wordpress-dev" : "dev-master"
-	},
-	"autoload" : {
-		"psr-4" : {
-			"WpTestsStarter\\" : "src/WpTestsStarter"
-		}
-	}
+  "name": "inpsyde/wp-tests-starter",
+  "description": "A package that helps you setting up WordPress integration test environment quickly.",
+  "keywords": [
+    "WordPress",
+    "Tests",
+    "Integration tests"
+  ],
+  "licence": "MIT",
+  "authors": [
+    {
+      "name": "David Naber",
+      "email": "d.naber@inpsyde.com",
+      "role": "Developer"
+    }
+  ],
+  "suggest": {
+    "inpsyde/wordpress-dev": "WordPress development composer package."
+  },
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "require-dev": {
+    "inpsyde/wordpress-dev": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "WpTestsStarter\\": "src/WpTestsStarter"
+    }
+  }
 }
