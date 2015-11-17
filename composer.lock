@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4baf02671561c5d0a77bc7fa0ff6720a",
+    "hash": "5a01c96ba12c97ce2c0edaa27f7038ac",
     "packages": [],
     "packages-dev": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/inpsyde/wordpress-dev.git",
-                "reference": "707f24cb56a85b02fdd902379478ce22386afd35"
+                "reference": "db44d14c36c5895e82135874ec3dfaf88c067682"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/707f24cb56a85b02fdd902379478ce22386afd35",
-                "reference": "707f24cb56a85b02fdd902379478ce22386afd35",
+                "url": "https://api.github.com/repos/inpsyde/wordpress-dev/zipball/db44d14c36c5895e82135874ec3dfaf88c067682",
+                "reference": "db44d14c36c5895e82135874ec3dfaf88c067682",
                 "shasum": ""
             },
             "require": {
@@ -42,7 +42,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2015-11-15 14:21:15"
+            "time": "2015-11-17 06:21:15"
         }
     ],
     "aliases": [],

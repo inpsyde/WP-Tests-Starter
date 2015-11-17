@@ -3,6 +3,13 @@
 	"description" : "A package that helps you setting up WordPress test environment quickly.",
 	"keywords" : [ "WordPress", "Tests" ],
 	"licence" :"MIT",
+	"authors": [
+		{
+			"name": "David Naber",
+			"email": "d.naber@inpsyde.com",
+			"role": "Developer"
+		}
+	],
 	"suggest" : {
 		"inpsyde/wordpress-dev" : "WordPress development composer package."
 	},
