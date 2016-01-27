@@ -42,8 +42,6 @@ class WpTestsStarter {
 	 */
 	public function bootstrap() {
 
-		$this->createDummyConfigFile();
-
 		// define required constants if they not exists
 		$this->defineDbHost();
 		$this->defineDbCharset();
@@ -58,6 +56,8 @@ class WpTestsStarter {
 		$this->defineWpDebug();
 
 		$this->defineAbspath();
+
+		$this->createDummyConfigFile();
 
 		$wpBoostrapFile = $this->baseDir . '/tests/phpunit/includes/bootstrap.php';
 		require_once $wpBoostrapFile;
