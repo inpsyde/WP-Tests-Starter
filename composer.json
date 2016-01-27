@@ -1,6 +1,6 @@
 {
   "name": "inpsyde/wp-tests-starter",
-  "description": "A package that helps you setting up WordPress integration test environment quickly.",
+  "description": "A package that helps you setting up WordPress integration test environments quickly.",
   "keywords": [
     "WordPress",
     "Tests",
