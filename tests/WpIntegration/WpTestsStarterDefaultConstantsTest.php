@@ -1,6 +1,6 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace WpTestsStarter\Test\Integration;
+namespace WpTestsStarter\Test\WpIntegration;
 
 use
 	WpTestsStarter\WpTestsStarter,
