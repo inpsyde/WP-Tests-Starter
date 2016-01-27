@@ -282,7 +282,7 @@ class WpTestsStarter {
 	 */
 	public function createDummyConfigFile() {
 
-		$configFile = $this->baseDir . '/wp-tests-config.php';
+		$configFile = $this->getConfigFile();
 		if ( ! file_exists( $configFile ) )
 			touch( $configFile );
 
@@ -303,6 +303,14 @@ global \$table_prefix;
 PHP;
 		file_put_contents( $configFile, $content, LOCK_EX );
 
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getConfigFile() {
+
+		return $this->baseDir . '/wp-tests-config.php';
 	}
 
 	/**
