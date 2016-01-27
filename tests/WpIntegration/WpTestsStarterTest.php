@@ -1,7 +1,9 @@
 <?php # -*- coding: utf-8 -*-
 
-namespace WpTestsStarter\Test\Integration;
-use WpTestsStarter\WpTestsStarter;
+namespace WpTestsStarter\Test\WpIntegration;
+
+use
+	WpTestsStarter\WpTestsStarter;
 
 /**
  * Class WpTestsStarterTest

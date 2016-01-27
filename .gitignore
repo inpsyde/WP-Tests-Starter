@@ -1,2 +1,5 @@
 vendor/
 tmp/
+# Ignoring local configuration files
+phpunit-integration.xml
+phpunit.xml
