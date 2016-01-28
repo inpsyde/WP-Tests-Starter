@@ -2,7 +2,7 @@
 This package provides an easy and reproducible way to set up _integration tests_ for WordPress plugins and packages
 using composer. It allows you to configure your tests solely within a `phpunit.xml` file.
 
-Make sure you read the [[#Security-notice]] and [[#How-it-works]].
+Make sure you read the [Security notice](#security-notice) as well as [How it works](#how-it-works)!
 
 ## Quick start
 
@@ -21,7 +21,11 @@ $ composer require inpsyde/wp-tests-starter:~1.0 --dev
 
 3) Setup the minimum required parameter (the database credentials) and run the bootstrap:
 
-```
+```php
+<?php
+use
+	WpTestsStarter\WpTestsStarter;
+
 // The full path to the wordpress package
 $starter = new WpTestsStarter( '/path/to/your-project/vendor/inpsyde/wordpress-dev' );
 
@@ -64,9 +68,9 @@ appear in your composer.json:
   "require-dev": {
     "inpsyde/wordpress-dev": "~4.4",
     "inpsyde/wp-tests-starter": "~1.0",
-  },
+  }
 ```
-The packages itself are installed inside the `vendor/directory`. Now that you have all dependencies, prepare your `phpunit.xml.dist`:
+The packages itself are installed inside the `vendor/` directory. Now that you have all dependencies, prepare your `phpunit.xml.dist`:
 
 ```xml
 <phpunit
@@ -180,10 +184,14 @@ WpTestsStarter WpTestsStarter::__construct( string $baseDir, [ WpTestsStarter\Co
 `$baseDir` must specify the path to the directory of the WordPres developer package.
 `$saltGenerator` can be an instance of `SaltGeneratorInterface`. Default is `WpTestsStarter\Common\SaltGenerator`.
 
+---
+
 ```
 void WpTestsStarter::bootstrap()
 ```
 Defines missing mandatory constants, creates the file `wp-tests-config.php` and loads the WordPress core bootstrap.
+
+---
 
 ```
 bool WpTestsStarter::defineConst( string $fqn, mixed $value );
