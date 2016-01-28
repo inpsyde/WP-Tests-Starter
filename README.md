@@ -200,45 +200,63 @@ Defines an arbitrary constant `$fqn` (full qualified name) with the value `$valu
 Example `$starter->defineConst( 'SomePlugin\FOO', 'Hello World' );` Returns `FALSE` if the constant already exists,
 otherwise `TRUE`.
 
+---
+
 ```
 void WpTestsStarter::defineAbspath( [ string $absPath = '' ] );
 ```
 Defines the constant `\ABSPATH`. Default value is `WpTestsStarter::$baseDir . '/src/`, if no or empty value is given.
+
+---
 
 ```
 void WpTestsStarter::defineDbName( string $dbName );
 ```
 Defines the constant `\DB_NAME`.
 
+---
+
 ```
 void WpTestsStarter::defineDbHost( [ string $dbHost = 'localhost' ] );
 ```
 Defines the constant `\DB_HOST`.
+
+---
 
 ```
 void WpTestsStarter::defineDbUser( string $dbUser );
 ```
 Defines the constant `\DB_USER`.
 
+---
+
 ```
 void WpTestsStarter::defineDbPassword( string $dbPassword );
 ```
 Defines the constant `\DB_PASSWORD`.
+
+---
 
 ```
 void WpTestsStarter::defineDbCharset( [ string $dbCharset = 'utf8' ] );
 ```
 Defines the constant `\DB_CHARSET`.
 
+---
+
 ```
 void WpTestsStarter::defineDbCollate( [ string $dbCollate = '' ] );
 ```
 Defines the constant `\DB_COLLATE`.
 
+---
+
 ```
 void WpTestsStarter::defineWpDebug( [ bool $dbDebug = FALSE ] );
 ```
 Defines the constant `\WP_DEBUG`.
+
+---
 
 ```
 void WpTestsStarter::defineSalts();
@@ -246,45 +264,63 @@ void WpTestsStarter::defineSalts();
 Create random values for each of the keys and defines the constants `\AUTH_KEY`, `\SECURE_AUTH_KEY`, `\LOGGED_IN_KEY`,
 `\NONCE_KEY`, `\SECURE_AUTH_SALT`, `\LOGGED_IN_SALT` and `\NONCE_SALT`.
 
+---
+
 ```
 void WpTestsStarter::defineTestsDomain( [ string $domain = 'example.org' ] );
 ```
 Defines the constant `\WP_TESTS_DOMAIN`.
+
+---
 
 ```
 void WpTestsStarter::defineTestsEmail( [ string $email = 'admin@example.org' ] );
 ```
 Defines the constant `\WP_TESTS_EMAIL`.
 
+---
+
 ```
 void WpTestsStarter::defineTestsTitle( [ string $title = 'Test Blog' ] );
 ```
 Defines the constant `\WP_TESTS_TITLE`.
+
+---
 
 ```
 void WpTestsStarter::definePhpBinary( [ string $binary = 'php' ] );
 ```
 Defines the constant `\WP_PHP_BINARY`.
 
+---
+
 ```
 void WpTestsStarter::defineWpLang( [ string $lang = '' ] );
 ```
 Defines the constant `\WPLANG`.
+
+---
 
 ```
 void WpTestsStarter::defineTestForceKnownBugs( bool $flag );
 ```
 Defines the constant `\WP_TESTS_FORCE_KNOWN_BUGS`.
 
+---
+
 ```
 void WpTestsStarter::defineTestMultisite( bool $flag );
 ```
 Defines the constant `\WP_TESTS_MULTISITE`.
 
+---
+
 ```
 void WpTestsStarter::defineWpPluginDir( string $dir );
 ```
 Defines the constant `\WP_PLUGIN_DIR`.
+
+---
 
 ```
 void WpTestsStarter::setActivePlugin( string $plugin );
@@ -294,15 +330,21 @@ The function can be used one or more times to specify more than one acitve plugi
 
 Declares the global array `$GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ]`.
 
+---
+
 ```
 void WpTestsStarter::setTablePrefix( [ string $tablePrefix = 'wptests_' ] );
 ```
 Declares the global variable `$GLOBALS[ 'table_prefix' ]`.
 
+---
+
 ```
 void WpTestsStarter::setGlobal( string $var, mixed $value );
 ```
 Declares or overrides the global variable `$GLOBALS[ $var ]` to the value `$value`.
+
+---
 
 ```
 void WpTestsStarter::createDummyConfigFile();
@@ -310,10 +352,14 @@ void WpTestsStarter::createDummyConfigFile();
 Writes all constants and globals, that was configured via this WpTestsStarter instance to the file
 `"{WpTestsStarter::getConfigFile()}/wp-tests-config.php"`.
 
+---
+
 ```
 string WpTestsStarter::getConfigFile();
 ```
 Returns `"{WpTestsStarter::$baseDir}/wp-tests-config.php"`.
+
+---
 
 ```
 array WpTestsStarter::getDefinedConstants();
