@@ -4,6 +4,15 @@ using composer. It allows you to configure your tests solely within a `phpunit.x
 
 Make sure you read the [Security notice](#security-notice) as well as [How it works](#how-it-works)!
 
+Table of contents
+ * [Quick start](#quick-start)
+ * [Complete example](#complete-example)
+ * [API reference](#api-reference)
+ * [How it works](#how-it-works)
+ * [Security notice](#security-notice)
+ * [License](#license)
+ * [Created by Inpsyde](#created-by-inpsyde)
+
 ## Quick start
 
 1) Install the WordPress developer package in the version you want to test with (e.g. the 4.4 branch):
