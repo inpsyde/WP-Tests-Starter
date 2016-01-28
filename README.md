@@ -393,3 +393,5 @@ charge on your personal or commercial website.
 ## Created by Inpsyde
 
 Visit us at [inpsyde.com](http://inpsyde.com/).
+
+[Back to top](#wp-tests-starter)
