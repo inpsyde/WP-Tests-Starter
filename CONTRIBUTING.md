@@ -24,4 +24,4 @@ Thanks for contributing to WP Tests Starter
 * Wait for feedback. We look at pull requests on a regular basis.
 
 # License
-By contributing code to _WP Tests Starter_, you grant its use under the [MIT License](LICENSE).
+By contributing code to _WP Tests Starter_, you grant its use under this [License](LICENSE).
