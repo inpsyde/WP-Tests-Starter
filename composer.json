@@ -6,7 +6,7 @@
     "Tests",
     "Integration tests"
   ],
-  "license": "MIT",
+  "license": "gpl-2.0-or-later",
   "authors": [
     {
       "name": "David Naber",
