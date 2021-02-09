@@ -387,7 +387,7 @@ necessary as the `wp-tests-config.php` has to be placed inside the package root 
 composer control.
 
 ## License
-Good news, this plugin is free for everyone! Since it's released under [MIT-License](LICENSE), you can use it free of
+Good news, this plugin is free for everyone! Since it's released under this [License](LICENSE), you can use it free of
 charge on your personal or commercial website.
 
 ## Created by Inpsyde
