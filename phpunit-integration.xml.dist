@@ -7,13 +7,13 @@
 	convertWarningsToExceptions="true"
 	>
 	<php>
-		<const name="WpTestsStarter\Test\WpIntegration\Db\USER" value="define-your-db-name" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\NAME" value="define-your-db-name" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\PASSWORD" value="define-your-db-password" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\HOST" value="localhost" />
+		<const name="WpTestsStarter\Test\WpIntegration\Db\USER" value="db" />
+		<const name="WpTestsStarter\Test\WpIntegration\Db\NAME" value="test" />
+		<const name="WpTestsStarter\Test\WpIntegration\Db\PASSWORD" value="db" />
+		<const name="WpTestsStarter\Test\WpIntegration\Db\HOST" value="db" />
 		<const name="WpTestsStarter\Test\WpIntegration\Db\CHARSET" value="utf8" />
 		<const name="WpTestsStarter\Test\WpIntegration\Db\COLLATE" value="" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\TABLE_PREFIX" value="wp_tests_starter_" />
+		<const name="WpTestsStarter\Test\WpIntegration\Db\TABLE_PREFIX" value="wp_test_" />
 	</php>
 	<testsuites>
 		<testsuite name="WpIntegrationTests">

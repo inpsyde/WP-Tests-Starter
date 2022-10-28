@@ -1,3 +1,4 @@
+.ddev/*.local.yaml
 vendor/
 tmp/
 composer.lock

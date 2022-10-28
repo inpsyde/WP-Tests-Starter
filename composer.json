@@ -22,11 +22,17 @@
     },
     "require-dev": {
         "inpsyde/wordpress-dev": "dev-master",
-        "inpsyde/php-coding-standards": "^1.0"
+        "inpsyde/php-coding-standards": "^1.0",
+        "phpunit/phpunit": "^5"
     },
     "autoload": {
         "psr-4": {
             "WpTestsStarter\\": "src/WpTestsStarter"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }
