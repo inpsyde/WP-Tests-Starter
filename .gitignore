@@ -1,5 +1,5 @@
 vendor/
 tmp/
-# Ignoring local configuration files
+composer.lock
 phpunit-integration.xml
 phpunit.xml
