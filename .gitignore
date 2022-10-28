@@ -1,3 +1,5 @@
 vendor/
 tmp/
 composer.lock
+phpunit-integration.xml
+phpunit.xml
