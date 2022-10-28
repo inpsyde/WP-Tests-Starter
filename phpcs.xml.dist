@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset>
+    <file>./src/</file>
+    <file>./test/</file>
+
+    <arg value="sp"/>
+    <arg name="colors"/>
+    <config name="testVersion" value="7.3-"/>
+    <config name="ignore_warnings_on_exit" value="1"/>
+
+    <rule ref="Inpsyde">
+    </rule>
+
+    <rule ref="Inpsyde.CodeQuality.Psr4">
+        <properties>
+            <property
+                    name="psr4"
+                    type="array"
+                    value="WpTestsStarter=>src,WpTestsStarter\Test\Unit=>test/Unit,WpTestsStarter\Test\Integration=>test/Integration"
+            />
+        </properties>
+    </rule>
+
+    <exclude-pattern type="relative">vendor/*</exclude-pattern>
+</ruleset>
