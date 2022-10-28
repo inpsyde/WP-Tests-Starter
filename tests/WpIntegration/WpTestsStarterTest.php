@@ -1,9 +1,10 @@
-<?php # -*- coding: utf-8 -*-
+<?php
+
+declare(strict_types=1);
 
 namespace WpTestsStarter\Test\WpIntegration;
 
-use
-	WpTestsStarter\WpTestsStarter;
+use WpTestsStarter\WpTestsStarter;
 
 /**
  * Class WpTestsStarterTest
@@ -13,141 +14,140 @@ use
  *
  * @package WpTestsStarter\Test\Integration
  */
-class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
+class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @type string
+     */
+    private static $baseDir;
 
-	/**
-	 * @type string
-	 */
-	private static $baseDir;
+    /**
+     * @type WpTestsStarter
+     */
+    private static $testee;
 
-	/**
-	 * @type WpTestsStarter
-	 */
-	private static $testee;
+    /**
+     * runs once before all the tests
+     */
+    public static function setUpBeforeClass()
+    {
+        self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/inpsyde/wordpress-dev';
+        self::$testee = new WpTestsStarter(self::$baseDir);
 
-	/**
-	 * runs once before all the tests
-	 */
-	public static function setUpBeforeClass() {
+        // defined in phpunit-integration.xml
+        self::$testee->defineDbName(Db\NAME);
+        self::$testee->defineDbUser(Db\USER);
+        self::$testee->defineDbPassword(Db\PASSWORD);
+        self::$testee->defineDbHost(Db\HOST);
+        self::$testee->defineDbCharset(Db\CHARSET);
+        self::$testee->defineDbCollate(Db\COLLATE);
+        self::$testee->setTablePrefix(Db\TABLE_PREFIX);
 
-		self::$baseDir = dirname( dirname( __DIR__ ) ) . '/vendor/inpsyde/wordpress-dev';
-		self::$testee = new WpTestsStarter( self::$baseDir );
+        self::$testee->defineAbspath();
+        self::$testee->definePhpBinary();
+        self::$testee->defineWpLang();
+        self::$testee->defineWpDebug();
+        self::$testee->defineTestsDomain();
+        self::$testee->defineTestsEmail();
+        self::$testee->defineTestsTitle();
 
-		// defined in phpunit-integration.xml
-		self::$testee->defineDbName( Db\NAME );
-		self::$testee->defineDbUser( Db\USER );
-		self::$testee->defineDbPassword( Db\PASSWORD );
-		self::$testee->defineDbHost( Db\HOST );
-		self::$testee->defineDbCharset( Db\CHARSET );
-		self::$testee->defineDbCollate( Db\COLLATE );
-		self::$testee->setTablePrefix( Db\TABLE_PREFIX );
+        // test plugin loading
+        $plugin_test_dir = dirname(__DIR__) . '/tmp';
+        $test_plugin = 'plugin/test-plugin.php';
+        self::$testee->defineWpPluginDir($plugin_test_dir);
+        self::$testee->setActivePlugin($test_plugin);
+    }
 
-		self::$testee->defineAbspath();
-		self::$testee->definePhpBinary();
-		self::$testee->defineWpLang();
-		self::$testee->defineWpDebug();
-		self::$testee->defineTestsDomain();
-		self::$testee->defineTestsEmail();
-		self::$testee->defineTestsTitle();
+    public function testSetUp()
+    {
+        $this->assertNotEmpty(\DB_NAME);
+        $this->assertNotEmpty(\DB_USER);
+        $this->assertNotEmpty($GLOBALS['table_prefix']);
+        $definedConstants = self::$testee->getDefinedConstants();
+        $this->assertArrayHasKey('DB_NAME', $definedConstants);
+        $this->assertArrayHasKey('DB_USER', $definedConstants);
+    }
 
-		// test plugin loading
-		$plugin_test_dir = dirname( __DIR__ ) . '/tmp';
-		$test_plugin     = 'plugin/test-plugin.php';
-		self::$testee->defineWpPluginDir( $plugin_test_dir );
-		self::$testee->setActivePlugin( $test_plugin );
-	}
+    /**
+     * @see WpTestsStarter::createDummyConfigFile()
+     */
+    public function testCreateDummyConfigFile()
+    {
+        $configFile = self::$baseDir . '/wp-tests-config.php';
+        if (file_exists($configFile)) {
+            unlink($configFile);
+        }
 
-	public function testSetUp() {
+        self::$testee->createDummyConfigFile();
+        $fileContent = file_get_contents($configFile);
 
-		$this->assertNotEmpty( \DB_NAME );
-		$this->assertNotEmpty( \DB_USER );
-		$this->assertNotEmpty( $GLOBALS[ 'table_prefix' ] );
-		$definedConstants = self::$testee->getDefinedConstants();
-		$this->assertArrayHasKey( 'DB_NAME', $definedConstants );
-		$this->assertArrayHasKey( 'DB_USER', $definedConstants );
-	}
+        $this->assertStringEndsWith(
+            self::$testee->getDefinedConstantsCode(),
+            $fileContent
+        );
 
-	/**
-	 * @see WpTestsStarter::createDummyConfigFile()
-	 */
-	public function testCreateDummyConfigFile() {
+        $definedConstants = self::$testee->getDefinedConstants();
+        foreach ($definedConstants as $name => $value) {
+            $pattern = sprintf(
+                "~define\(\s*'%s',\s*'%s'\s*\);~",
+                preg_quote(self::$testee->escapePhpString($name)),
+                preg_quote(self::$testee->escapePhpString($value))
+            );
+            $this->assertRegExp(
+                $pattern,
+                $fileContent
+            );
+        }
 
-		$configFile = self::$baseDir . '/wp-tests-config.php';
-		if ( file_exists( $configFile ) )
-			unlink( $configFile );
+        unlink($configFile);
+    }
 
-		self::$testee->createDummyConfigFile();
-		$fileContent = file_get_contents( $configFile );
+    /**
+     * @see WpTestsStarter::bootstrap()
+     */
+    public function testBootstrap()
+    {
+        self::$testee->bootstrap();
 
-		$this->assertStringEndsWith(
-			self::$testee->getDefinedConstantsCode(),
-			$fileContent
-		);
+        // test if the environment is available
+        $this->assertTrue(
+            class_exists('\WP_UnitTestCase'),
+            'Class \WP_UnitTestCase does not exist.'
+        );
 
-		$definedConstants = self::$testee->getDefinedConstants();
-		foreach ( $definedConstants as $name => $value ) {
+        $this->assertInstanceOf(
+            '\wpdb',
+            $GLOBALS['wpdb']
+        );
 
-			$pattern = sprintf(
-				"~define\(\s*'%s',\s*'%s'\s*\);~",
-				preg_quote( self::$testee->escapePhpString( $name ) ),
-				preg_quote( self::$testee->escapePhpString( $value ) )
-			);
-			$this->assertRegExp(
-				$pattern,
-				$fileContent
-			);
-		}
+        $dbTables = $GLOBALS['wpdb']->get_results(
+            'SHOW TABLES',
+            \ARRAY_N
+        );
+        $tablesFlat = [];
+        foreach ($dbTables as $row) {
+            $tablesFlat[] = $row[0];
+        }
 
-		unlink( $configFile );
-	}
+        $optionTable = Db\TABLE_PREFIX . 'options';
+        $this->assertTrue(
+            in_array($optionTable, $tablesFlat),
+            "Table {$optionTable} does not exist!"
+        );
+    }
 
-	/**
-	 * @see WpTestsStarter::bootstrap()
-	 */
-	public function testBootstrap() {
-
-		self::$testee->bootstrap();
-
-		// test if the environment is available
-		$this->assertTrue(
-			class_exists( '\WP_UnitTestCase' ),
-			'Class \WP_UnitTestCase does not exist.'
-		);
-
-		$this->assertInstanceOf(
-			'\wpdb',
-			$GLOBALS[ 'wpdb' ]
-		);
-
-		$dbTables =  $GLOBALS[ 'wpdb' ]->get_results(
-			'SHOW TABLES',
-			\ARRAY_N
-		);
-		$tablesFlat = array();
-		foreach ( $dbTables as $row ) {
-			$tablesFlat[] = $row[ 0 ];
-		}
-
-		$optionTable = Db\TABLE_PREFIX.'options';
-		$this->assertTrue(
-			in_array( $optionTable, $tablesFlat ),
-			"Table {$optionTable} does not exist!"
-		);
-	}
-
-	/**
-	 * @see WpTestsStarter::setActivePlugin()
-	 * @depends testBootstrap
-	 */
-	public function testSetActivePlugin() {
-
-		/**
-		 * @see tmp/plugin/test-plugin.php
-		 */
-		$this->assertTrue(
-			defined( 'WP_TEST_STARTER_TEST_PLUGIN' ),
-			'Test plugin file seemed not loaded.'
-		);
-	}
+    /**
+     * @see     WpTestsStarter::setActivePlugin()
+     * @depends testBootstrap
+     */
+    public function testSetActivePlugin()
+    {
+        /**
+         * @see tmp/plugin/test-plugin.php
+         */
+        $this->assertTrue(
+            defined('WP_TEST_STARTER_TEST_PLUGIN'),
+            'Test plugin file seemed not loaded.'
+        );
+    }
 }
- 

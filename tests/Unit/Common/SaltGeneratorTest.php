@@ -1,50 +1,52 @@
-<?php # -*- coding: utf-8 -*-
+<?php
+
+declare(strict_types=1);
 
 namespace WpTestsStarter\Test\Unit\Common;
+
 use WpTestsStarter\Common;
 
-class SaltGeneratorTest extends \PHPUnit_Framework_TestCase {
+class SaltGeneratorTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @dataProvider generateSaltTestProvider
+     * @param int $length
+     * @see          SaltGenerator::generateSalt()
+     */
+    public function testGenerateSalt($length)
+    {
+        $testee = new Common\SaltGenerator();
 
-	/**
-	 * @dataProvider generateSaltTestProvider
-	 * @see SaltGenerator::generateSalt()
-	 * @param int $length
-	 */
-	public function testGenerateSalt( $length ) {
+        $salt = $testee->generateSalt($length);
 
-		$testee = new Common\SaltGenerator;
+        $this->assertRegExp(
+            '~^[\x20-\x7E]{' . preg_quote($length) . '}$~',
+            $salt
+        );
+    }
 
-		$salt = $testee->generateSalt( $length );
+    /**
+     * @return array
+     */
+    public function generateSaltTestProvider()
+    {
+        $data = [];
 
-		$this->assertRegExp(
-			'~^[\x20-\x7E]{' . preg_quote( $length ) . '}$~',
-			$salt
-		);
-	}
+        # 0:
+        $data[] = [
+            1,
+        ];
 
-	/**
-	 * @return array
-	 */
-	public function generateSaltTestProvider() {
+        # 2:
+        $data[] = [
+            10,
+        ];
 
-		$data = array();
+        #3
+        $data[] = [
+            42,
+        ];
 
-		# 0:
-		$data[] = array(
-			1
-		);
-
-		# 2:
-		$data[] = array(
-			10
-		);
-
-		#3
-		$data[] = array(
-			42
-		);
-
-		return $data;
-	}
+        return $data;
+    }
 }
- 

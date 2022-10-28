@@ -1,279 +1,283 @@
-<?php # -*- coding: utf-8 -*-
+<?php
+
+declare(strict_types=1);
 
 namespace WpTestsStarter\Test\Unit;
+
 use WpTestsStarter\WpTestsStarter;
 
-class WpTestsStarterTest extends \PHPUnit_Framework_TestCase {
+class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @see WpTestsStarter::defineConst()
+     */
+    public function testDefineConst()
+    {
+        $testee = new WpTestsStarter('');
 
-	/**
-	 * @see WpTestsStarter::defineConst()
-	 */
-	public function testDefineConst() {
+        $testee->defineConst('FOO', 'Foo');
+        $this->assertTrue(
+            defined('FOO'),
+            'Constant FOO is not defined but should.'
+        );
+        $this->assertEquals(
+            'Foo',
+            FOO
+        );
 
-		$testee = new WpTestsStarter( '' );
+        $testee->defineConst(__NAMESPACE__ . '\BAR', 'Bar');
+        $this->assertTrue(
+            defined(__NAMESPACE__ . '\BAR'),
+            'Constant ' . __NAMESPACE__ . '\BAR is not defined but should.'
+        );
+        $this->assertEquals(
+            'Bar',
+            \WpTestsStarter\Test\Unit\BAR
+        );
 
-		$testee->defineConst( 'FOO', 'Foo' );
-		$this->assertTrue(
-			defined( 'FOO' ),
-			'Constant FOO is not defined but should.'
-		);
-		$this->assertEquals(
-			'Foo',
-			FOO
-		);
+        // check that constants don't get overwrite
+        $this->assertFalse(
+            $testee->defineConst('FOO', 'Bazz'),
+            'WpTestsStarter::defineConst returned wrong value.'
+        );
+        $this->assertEquals(
+            'Foo',
+            FOO
+        );
+    }
 
-		$testee->defineConst( __NAMESPACE__ . '\BAR', 'Bar' );
-		$this->assertTrue(
-			defined( __NAMESPACE__ . '\BAR' ),
-			'Constant ' . __NAMESPACE__ . '\BAR is not defined but should.'
-		);
-		$this->assertEquals(
-			'Bar',
-			\WpTestsStarter\Test\Unit\BAR
-		);
+    /**
+     * @see WpTestsStarter::getDefinedConstants()
+     */
+    public function testGetDefinedConstants()
+    {
+        $testee = new WpTestsStarter('');
 
-		// check that constants don't get overwrite
-		$this->assertFalse(
-			$testee->defineConst( 'FOO', 'Bazz' ),
-			'WpTestsStarter::defineConst returned wrong value.'
-		);
-		$this->assertEquals(
-			'Foo',
-			FOO
-		);
-	}
+        $const = strtoupper(__FUNCTION__);
+        $value = __METHOD__;
+        $testee->defineConst($const, $value);
 
-	/**
-	 * @see WpTestsStarter::getDefinedConstants()
-	 */
-	public function testGetDefinedConstants() {
+        $definedConstants = $testee->getDefinedConstants();
+        $this->assertArrayHasKey(
+            $const,
+            $definedConstants
+        );
+        $this->assertEquals(
+            $value,
+            $definedConstants[$const]
+        );
+    }
 
-		$testee = new WpTestsStarter( '' );
+    public function testGetDefinedConstantsCode()
+    {
+        $testee = new WpTestsStarter('');
 
-		$const = strtoupper( __FUNCTION__ );
-		$value = __METHOD__;
-		$testee->defineConst( $const, $value );
+        $const = strtoupper(__FUNCTION__);
+        $value = __METHOD__;
+        $testee->defineConst($const, $value);
 
-		$definedConstants = $testee->getDefinedConstants();
-		$this->assertArrayHasKey(
-			$const,
-			$definedConstants
-		);
-		$this->assertEquals(
-			$value,
-			$definedConstants[ $const ]
-		);
-	}
+        $definedConstantsCode = $testee->getDefinedConstantsCode();
 
-	public function testGetDefinedConstantsCode() {
+        $expectedConst = $testee->escapePhpString($const);
+        $expectedValue = $testee->escapePhpString($value);
 
-		$testee = new WpTestsStarter( '' );
+        $expectPattern = sprintf(
+            "~define\(\s*'%s',\s*'%s'\s*\);~",
+            preg_quote($expectedConst),
+            preg_quote($expectedValue)
+        );
 
-		$const = strtoupper( __FUNCTION__ );
-		$value = __METHOD__;
-		$testee->defineConst( $const, $value );
+        $this->assertRegExp(
+            $expectPattern,
+            $definedConstantsCode
+        );
+    }
 
-		$definedConstantsCode = $testee->getDefinedConstantsCode();
+    /**
+     * @see WpTestsStarter::defineAbspath()
+     */
+    public function testDefineAbspath()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $testee->defineAbspath();
 
-		$expectedConst = $testee->escapePhpString( $const );
-		$expectedValue = $testee->escapePhpString( $value );
+        $this->assertEquals(
+            $baseDir . 'src/',
+            \ABSPATH
+        );
+    }
 
-		$expectPattern = sprintf(
-			"~define\(\s*'%s',\s*'%s'\s*\);~",
-			preg_quote( $expectedConst ),
-			preg_quote( $expectedValue )
-		);
+    /**
+     * @see WpTestsStarter::defineDbName()
+     */
+    public function testDefineDbName()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $dbName = 'wp-tests-starter';
+        $testee->defineDbName($dbName);
 
-		$this->assertRegExp(
-			$expectPattern,
-			$definedConstantsCode
-		);
+        $this->assertEquals(
+            $dbName,
+            \DB_NAME
+        );
+    }
 
-	}
+    /**
+     * @see WpTestsStarter::defineDbHost()
+     */
+    public function testDefineDbHost()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $dbHost = 'remote.host';
+        $testee->defineDbHost($dbHost);
 
-	/**
-	 * @see WpTestsStarter::defineAbspath()
-	 */
-	public function testDefineAbspath() {
+        $this->assertEquals(
+            $dbHost,
+            \DB_HOST
+        );
+    }
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$testee->defineAbspath();
+    /**
+     * @see WpTestsStarter::defineDbUser()
+     */
+    public function testDefineDbUser()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $dbUser = 'my-user';
+        $testee->defineDbUser($dbUser);
 
-		$this->assertEquals(
-			$baseDir . 'src/',
-			\ABSPATH
-		);
-	}
+        $this->assertEquals(
+            $dbUser,
+            \DB_USER
+        );
+    }
 
-	/**
-	 * @see WpTestsStarter::defineDbName()
-	 */
-	public function testDefineDbName() {
+    /**
+     * @see WpTestsStarter::defineDbUser()
+     */
+    public function testDefineDbPassword()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $dbPassword = 'aku49l.ha83';
+        $testee->defineDbPassword($dbPassword);
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$dbName = 'wp-tests-starter';
-		$testee->defineDbName( $dbName );
+        $this->assertEquals(
+            $dbPassword,
+            \DB_PASSWORD
+        );
+    }
 
-		$this->assertEquals(
-			$dbName,
-			\DB_NAME
-		);
-	}
+    /**
+     * @see WpTestsStarter::defineWpPluginDir()
+     */
+    public function testDefineWpPluginDir()
+    {
+        $testee = new WpTestsStarter('');
+        $pluginDir = __DIR__;
+        $testee->defineWpPluginDir($pluginDir);
 
-	/**
-	 * @see WpTestsStarter::defineDbHost()
-	 */
-	public function testDefineDbHost() {
+        $this->assertTrue(
+            defined('\WP_PLUGIN_DIR')
+        );
+        $this->assertSame(
+            $pluginDir,
+            \WP_PLUGIN_DIR
+        );
+    }
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$dbHost = 'remote.host';
-		$testee->defineDbHost( $dbHost );
+    public function testActivatePlugin()
+    {
+        $testee = new WpTestsStarter('');
+        $plugin = 'my/plugin.php';
+        $testee->setActivePlugin($plugin);
 
-		$this->assertEquals(
-			$dbHost,
-			\DB_HOST
-		);
-	}
+        $this->assertContains(
+            $plugin,
+            $GLOBALS['wp_tests_options']['active_plugins']
+        );
+    }
 
-	/**
-	 * @see WpTestsStarter::defineDbUser()
-	 */
-	public function testDefineDbUser() {
+    /**
+     * @see WpTestsStarter::setGlobal()
+     */
+    public function testSetGlobal()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $var = 'foo';
+        $value = 'bar';
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$dbUser = 'my-user';
-		$testee->defineDbUser( $dbUser );
+        $this->assertArrayNotHasKey(
+            $var,
+            $GLOBALS
+        );
 
-		$this->assertEquals(
-			$dbUser,
-			\DB_USER
-		);
-	}
+        $testee->setGlobal($var, $value);
 
-	/**
-	 * @see WpTestsStarter::defineDbUser()
-	 */
-	public function testDefineDbPassword() {
+        $this->assertEquals(
+            $value,
+            $GLOBALS[$var]
+        );
+    }
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$dbPassword = 'aku49l.ha83';
-		$testee->defineDbPassword( $dbPassword );
+    /**
+     * @see WpTestsStarter::setTablePrefix()
+     */
+    public function testSetTablePrefix()
+    {
+        $baseDir = '/path/to/wp-repo/';
+        $testee = new WpTestsStarter($baseDir);
+        $tablePrefix = 'wp_';
+        $testee->setTablePrefix($tablePrefix);
 
-		$this->assertEquals(
-			$dbPassword,
-			\DB_PASSWORD
-		);
-	}
+        global $table_prefix;
+        $this->assertEquals(
+            $tablePrefix,
+            $table_prefix
+        );
+    }
 
-	/**
-	 * @see WpTestsStarter::defineWpPluginDir()
-	 */
-	public function testDefineWpPluginDir() {
+    /**
+     * @see WpTestsStarter::createDummyConfigFile()
+     */
+    public function testCreateDummyConfigFile()
+    {
+        $baseDir = dirname(__DIR__) . '/tmp';
+        $configFile = $baseDir . '/wp-tests-config.php';
+        $testee = new WpTestsStarter($baseDir);
 
-		$testee = new WpTestsStarter( '' );
-		$pluginDir = __DIR__;
-		$testee->defineWpPluginDir( $pluginDir );
+        $const = strtoupper(__FUNCTION__);
+        $testee->defineConst($const, 'FOO');
+        $testee->defineConst($const . '_1', 'FOO');
+        $testee->defineConst($const . '_2', 'FOO');
 
-		$this->assertTrue(
-			defined( '\WP_PLUGIN_DIR' )
-		);
-		$this->assertSame(
-			$pluginDir,
-			\WP_PLUGIN_DIR		);
-	}
+        if (file_exists($configFile)) {
+            unlink($configFile);
+        }
 
-	public function testActivatePlugin() {
+        $this->assertFileNotExists(
+            $configFile,
+            "Remove the temporary config file before running this test."
+        );
 
-		$testee = new WpTestsStarter( '' );
-		$plugin = 'my/plugin.php';
-		$testee->setActivePlugin( $plugin );
+        $testee->createDummyConfigFile();
 
-		$this->assertContains(
-			$plugin,
-			$GLOBALS[ 'wp_tests_options' ][ 'active_plugins' ]
-		);
-	}
-	/**
-	 * @see WpTestsStarter::setGlobal()
-	 */
-	public function testSetGlobal() {
+        $this->assertFileExists($configFile);
+        $fileContent = file_get_contents($configFile);
 
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$var = 'foo';
-		$value = 'bar';
+        # count the number of definitions in the file
+        $replaceCount = 0;
+        str_replace('define(', 'define(', $fileContent, $replaceCount);
+        $this->assertEquals(
+            3,
+            $replaceCount
+        );
 
-		$this->assertArrayNotHasKey(
-			$var,
-			$GLOBALS
-		);
-
-		$testee->setGlobal( $var, $value );
-
-		$this->assertEquals(
-			$value,
-			$GLOBALS[ $var ]
-		);
-	}
-
-	/**
-	 * @see WpTestsStarter::setTablePrefix()
-	 */
-	public function testSetTablePrefix() {
-
-		$baseDir = '/path/to/wp-repo/';
-		$testee = new WpTestsStarter( $baseDir );
-		$tablePrefix = 'wp_';
-		$testee->setTablePrefix( $tablePrefix );
-
-		global $table_prefix;
-		$this->assertEquals(
-			$tablePrefix,
-			$table_prefix
-		);
-	}
-
-	/**
-	 * @see WpTestsStarter::createDummyConfigFile()
-	 */
-	public function testCreateDummyConfigFile() {
-
-		$baseDir = dirname( __DIR__ ) . '/tmp';
-		$configFile = $baseDir . '/wp-tests-config.php';
-		$testee = new WpTestsStarter( $baseDir );
-
-		$const = strtoupper( __FUNCTION__ );
-		$testee->defineConst( $const, 'FOO' );
-		$testee->defineConst( $const . '_1', 'FOO' );
-		$testee->defineConst( $const . '_2', 'FOO' );
-
-		if ( file_exists( $configFile ) )
-			unlink( $configFile );
-
-		$this->assertFileNotExists(
-			$configFile,
-			"Remove the temporary config file before running this test."
-		);
-
-		$testee->createDummyConfigFile();
-
-		$this->assertFileExists( $configFile );
-		$fileContent = file_get_contents( $configFile );
-
-		# count the number of definitions in the file
-		$replaceCount = 0;
-		str_replace( 'define(', 'define(', $fileContent, $replaceCount );
-		$this->assertEquals(
-			3,
-			$replaceCount
-		);
-
-		unlink( $configFile );
-	}
+        unlink($configFile);
+    }
 }
- 
