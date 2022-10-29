@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace WpTestsStarter\Test\Unit\Common;
 
+use PHPUnit\Framework\TestCase;
 use WpTestsStarter\Common;
 
-class SaltGeneratorTest extends \PHPUnit_Framework_TestCase
+class SaltGeneratorTest extends TestCase
 {
     /**
      * @dataProvider generateSaltTestProvider
@@ -19,8 +20,8 @@ class SaltGeneratorTest extends \PHPUnit_Framework_TestCase
 
         $salt = $testee->generateSalt($length);
 
-        $this->assertRegExp(
-            '~^[\x20-\x7E]{' . preg_quote($length) . '}$~',
+        self::assertMatchesRegularExpression(
+            '~^[\x20-\x7E]{' . preg_quote((string) $length) . '}$~',
             $salt
         );
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace WpTestsStarter\Test\WpIntegration;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use WpTestsStarter\WpTestsStarter;
 
-class WpTestsStarterDefaultConstantsTest extends PHPUnit_Framework_TestCase
+class WpTestsStarterDefaultConstantsTest extends TestCase
 {
     /**
      * @runInSeparateProcess
@@ -32,6 +32,6 @@ class WpTestsStarterDefaultConstantsTest extends PHPUnit_Framework_TestCase
 
         $this->assertFileExists($testee->getConfigFile());
         $config_data = file_get_contents($testee->getConfigFile());
-        $this->assertRegExp('~define\(\s\'ABSPATH\',\s\'[^\']+\'~', $config_data);
+        self::assertMatchesRegularExpression('~define\(\s\'ABSPATH\',\s\'[^\']+\'~', $config_data);
     }
 }

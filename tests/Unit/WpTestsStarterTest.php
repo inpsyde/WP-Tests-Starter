@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace WpTestsStarter\Test\Unit;
 
+use PHPUnit\Framework\TestCase;
 use WpTestsStarter\WpTestsStarter;
 
-class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
+class WpTestsStarterTest extends TestCase
 {
     /**
      * @see WpTestsStarter::defineConst()
@@ -16,31 +17,31 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $testee = new WpTestsStarter('');
 
         $testee->defineConst('FOO', 'Foo');
-        $this->assertTrue(
+        self::assertTrue(
             defined('FOO'),
             'Constant FOO is not defined but should.'
         );
-        $this->assertEquals(
+        self::assertSame(
             'Foo',
             FOO
         );
 
         $testee->defineConst(__NAMESPACE__ . '\BAR', 'Bar');
-        $this->assertTrue(
+        self::assertTrue(
             defined(__NAMESPACE__ . '\BAR'),
             'Constant ' . __NAMESPACE__ . '\BAR is not defined but should.'
         );
-        $this->assertEquals(
+        self::assertSame(
             'Bar',
             \WpTestsStarter\Test\Unit\BAR
         );
 
         // check that constants don't get overwrite
-        $this->assertFalse(
+        self::assertFalse(
             $testee->defineConst('FOO', 'Bazz'),
             'WpTestsStarter::defineConst returned wrong value.'
         );
-        $this->assertEquals(
+        self::assertSame(
             'Foo',
             FOO
         );
@@ -58,11 +59,11 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $testee->defineConst($const, $value);
 
         $definedConstants = $testee->getDefinedConstants();
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             $const,
             $definedConstants
         );
-        $this->assertEquals(
+        self::assertSame(
             $value,
             $definedConstants[$const]
         );
@@ -87,7 +88,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
             preg_quote($expectedValue)
         );
 
-        $this->assertRegExp(
+        self::assertMatchesRegularExpression(
             $expectPattern,
             $definedConstantsCode
         );
@@ -102,7 +103,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $testee = new WpTestsStarter($baseDir);
         $testee->defineAbspath();
 
-        $this->assertEquals(
+        self::assertSame(
             $baseDir . 'src/',
             \ABSPATH
         );
@@ -118,7 +119,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $dbName = 'wp-tests-starter';
         $testee->defineDbName($dbName);
 
-        $this->assertEquals(
+        self::assertSame(
             $dbName,
             \DB_NAME
         );
@@ -134,7 +135,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $dbHost = 'remote.host';
         $testee->defineDbHost($dbHost);
 
-        $this->assertEquals(
+        self::assertSame(
             $dbHost,
             \DB_HOST
         );
@@ -150,7 +151,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $dbUser = 'my-user';
         $testee->defineDbUser($dbUser);
 
-        $this->assertEquals(
+        self::assertSame(
             $dbUser,
             \DB_USER
         );
@@ -166,7 +167,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $dbPassword = 'aku49l.ha83';
         $testee->defineDbPassword($dbPassword);
 
-        $this->assertEquals(
+        self::assertSame(
             $dbPassword,
             \DB_PASSWORD
         );
@@ -181,10 +182,10 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $pluginDir = __DIR__;
         $testee->defineWpPluginDir($pluginDir);
 
-        $this->assertTrue(
+        self::assertTrue(
             defined('\WP_PLUGIN_DIR')
         );
-        $this->assertSame(
+        self::assertSame(
             $pluginDir,
             \WP_PLUGIN_DIR
         );
@@ -196,7 +197,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $plugin = 'my/plugin.php';
         $testee->setActivePlugin($plugin);
 
-        $this->assertContains(
+        self::assertContains(
             $plugin,
             $GLOBALS['wp_tests_options']['active_plugins']
         );
@@ -219,7 +220,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
 
         $testee->setGlobal($var, $value);
 
-        $this->assertEquals(
+        self::assertSame(
             $value,
             $GLOBALS[$var]
         );
@@ -236,7 +237,7 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
         $testee->setTablePrefix($tablePrefix);
 
         global $table_prefix;
-        $this->assertEquals(
+        self::assertSame(
             $tablePrefix,
             $table_prefix
         );
@@ -260,20 +261,20 @@ class WpTestsStarterTest extends \PHPUnit_Framework_TestCase
             unlink($configFile);
         }
 
-        $this->assertFileNotExists(
+        self::assertFileDoesNotExist(
             $configFile,
             "Remove the temporary config file before running this test."
         );
 
         $testee->createDummyConfigFile();
 
-        $this->assertFileExists($configFile);
+        self::assertFileExists($configFile);
         $fileContent = file_get_contents($configFile);
 
         # count the number of definitions in the file
         $replaceCount = 0;
         str_replace('define(', 'define(', $fileContent, $replaceCount);
-        $this->assertEquals(
+        self::assertSame(
             3,
             $replaceCount
         );

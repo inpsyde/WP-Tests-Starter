@@ -23,7 +23,7 @@
     "require-dev": {
         "inpsyde/wordpress-dev": "dev-master",
         "inpsyde/php-coding-standards": "^1.0",
-        "phpunit/phpunit": "^5"
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
