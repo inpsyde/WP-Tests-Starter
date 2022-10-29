@@ -18,7 +18,7 @@
         "inpsyde/wordpress-dev": "WordPress development composer package."
     },
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=7.4"
     },
     "require-dev": {
         "inpsyde/wordpress-dev": "dev-master",
