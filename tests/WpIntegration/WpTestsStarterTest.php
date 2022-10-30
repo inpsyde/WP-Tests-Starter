@@ -32,7 +32,7 @@ class WpTestsStarterTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/inpsyde/wordpress-dev';
+        self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
         self::$testee = new WpTestsStarter(self::$baseDir);
 
         // defined in phpunit-integration.xml

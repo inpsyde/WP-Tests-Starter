@@ -16,7 +16,7 @@ class WpTestsStarterDefaultConstantsTest extends TestCase
     {
         #$this->markTestIncomplete();
 
-        $baseDir = dirname(dirname(__DIR__)) . '/vendor/inpsyde/wordpress-dev';
+        $baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
         $testee = new WpTestsStarter($baseDir);
 
         // defined in phpunit-integration.xml
