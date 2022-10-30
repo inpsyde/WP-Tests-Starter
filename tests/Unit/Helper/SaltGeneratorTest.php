@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test\Unit\Common;
+namespace WpTestsStarter\Test\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
 use WpTestsStarter\Helper;
