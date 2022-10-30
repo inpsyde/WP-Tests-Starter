@@ -12,7 +12,7 @@ class WpTestsStarter
     private $baseDir;
 
     /**
-     * @type Common\SaltGeneratorInterface
+     * @type Common\SaltGenerator
      */
     private $saltGenerator;
 
@@ -29,9 +29,9 @@ class WpTestsStarter
      * the inpsyde/wordpress-dev package
      *
      * @param string $baseDir
-     * @param Common\SaltGeneratorInterface $saltGenerator
+     * @param Common\SaltGenerator $saltGenerator
      */
-    public function __construct($baseDir, Common\SaltGeneratorInterface $saltGenerator = null)
+    public function __construct($baseDir, Common\SaltGenerator $saltGenerator = null)
     {
         $this->baseDir = rtrim($baseDir, '\\/');
         if (!$saltGenerator) {

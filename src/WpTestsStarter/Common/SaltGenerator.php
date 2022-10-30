@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WpTestsStarter\Common;
 
-class SaltGenerator implements SaltGeneratorInterface
+class SaltGenerator
 {
     /**
      * Generates random strings using all ascii chars between
