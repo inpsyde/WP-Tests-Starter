@@ -188,10 +188,10 @@ class which performs a database rollback after each test.
 WP Tests starter provides the following methods to configure your tests.
 
 ```
-WpTestsStarter WpTestsStarter::__construct( string $baseDir, [ WpTestsStarter\Common\SaltGeneratorInterface $saltGenerator = NULL ] )
+WpTestsStarter WpTestsStarter::__construct( string $baseDir, [ WpTestsStarter\Helper\SaltGeneratorInterface $saltGenerator = NULL ] )
 ```
 `$baseDir` must specify the path to the directory of the WordPres developer package.
-`$saltGenerator` can be an instance of `SaltGeneratorInterface`. Default is `WpTestsStarter\Common\SaltGenerator`.
+`$saltGenerator` can be an instance of `SaltGeneratorInterface`. Default is `WpTestsStarter\Helper\SaltGenerator`.
 
 ---
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WpTestsStarter\Test\Unit\Common;
 
 use PHPUnit\Framework\TestCase;
-use WpTestsStarter\Common;
+use WpTestsStarter\Helper;
 
 class SaltGeneratorTest extends TestCase
 {
@@ -16,7 +16,7 @@ class SaltGeneratorTest extends TestCase
      */
     public function testGenerateSalt($length)
     {
-        $testee = new Common\SaltGenerator();
+        $testee = new Helper\SaltGenerator();
 
         $salt = $testee->generateSalt($length);
 
