@@ -312,47 +312,47 @@ PHP;
     /**
      * @return string
      */
-public function getConfigFile()
-{
-    return $this->baseDir . '/wp-tests-config.php';
-}
-
-    /**
-     * @return array
-     */
-public function getDefinedConstants()
-{
-    return $this->definedConstants;
-}
-
-    /**
-     * that feels so ugly
-     */
-public function getDefinedConstantsCode()
-{
-    $code = '';
-    foreach ($this->definedConstants as $constant => $value) {
-        $constant = $this->escapePhpString($constant);
-        $value = $this->escapePhpString($value);
-        $code .= "if ( ! defined( '{$constant}' ) )\n";
-        $code .= "\tdefine( '{$constant}', '{$value}' );\n";
+    public function getConfigFile()
+    {
+        return $this->baseDir . '/wp-tests-config.php';
     }
 
-    return $code;
-}
+        /**
+         * @return array
+         */
+    public function getDefinedConstants()
+    {
+        return $this->definedConstants;
+    }
 
-    /**
-     * that feels even more ugly
-     */
-public function escapePhpString($value)
-{
-    $value = str_replace(
-        ['<?php', '<?', '?>'],
-        '',
-        $value
-    );
-    $value = addcslashes($value, "'\\");
+        /**
+         * that feels so ugly
+         */
+    public function getDefinedConstantsCode()
+    {
+        $code = '';
+        foreach ($this->definedConstants as $constant => $value) {
+            $constant = $this->escapePhpString($constant);
+            $value = $this->escapePhpString($value);
+            $code .= "if ( ! defined( '{$constant}' ) )\n";
+            $code .= "\tdefine( '{$constant}', '{$value}' );\n";
+        }
 
-    return $value;
-}
+        return $code;
+    }
+
+        /**
+         * that feels even more ugly
+         */
+    public function escapePhpString($value)
+    {
+        $value = str_replace(
+            ['<?php', '<?', '?>'],
+            '',
+            $value
+        );
+        $value = addcslashes($value, "'\\");
+
+        return $value;
+    }
 }
