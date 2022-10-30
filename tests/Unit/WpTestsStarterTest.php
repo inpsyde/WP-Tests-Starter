@@ -9,10 +9,8 @@ use WpTestsStarter\WpTestsStarter;
 
 class WpTestsStarterTest extends TestCase
 {
-    /**
-     * @see WpTestsStarter::defineConst()
-     */
-    public function testDefineConst()
+
+    public function testDefineConst(): void
     {
         $testee = new WpTestsStarter('');
 
@@ -47,10 +45,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::getDefinedConstants()
-     */
-    public function testGetDefinedConstants()
+    public function testGetDefinedConstants(): void
     {
         $testee = new WpTestsStarter('');
 
@@ -69,7 +64,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    public function testGetDefinedConstantsCode()
+    public function testGetDefinedConstantsCode(): void
     {
         $testee = new WpTestsStarter('');
 
@@ -94,10 +89,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineAbspath()
-     */
-    public function testDefineAbspath()
+    public function testDefineAbspath(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -109,10 +101,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineDbName()
-     */
-    public function testDefineDbName()
+    public function testDefineDbName(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -125,10 +114,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineDbHost()
-     */
-    public function testDefineDbHost()
+    public function testDefineDbHost(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -141,10 +127,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineDbUser()
-     */
-    public function testDefineDbUser()
+    public function testDefineDbUser(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -157,10 +140,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineDbUser()
-     */
-    public function testDefineDbPassword()
+    public function testDefineDbPassword():void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -173,10 +153,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::defineWpPluginDir()
-     */
-    public function testDefineWpPluginDir()
+    public function testDefineWpPluginDir(): void
     {
         $testee = new WpTestsStarter('');
         $pluginDir = __DIR__;
@@ -191,7 +168,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    public function testActivatePlugin()
+    public function testActivatePlugin(): void
     {
         $testee = new WpTestsStarter('');
         $plugin = 'my/plugin.php';
@@ -203,10 +180,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::setGlobal()
-     */
-    public function testSetGlobal()
+    public function testSetGlobal(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -226,10 +200,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::setTablePrefix()
-     */
-    public function testSetTablePrefix()
+    public function testSetTablePrefix(): void
     {
         $baseDir = '/path/to/wp-repo/';
         $testee = new WpTestsStarter($baseDir);
@@ -243,10 +214,7 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @see WpTestsStarter::createDummyConfigFile()
-     */
-    public function testCreateDummyConfigFile()
+    public function testCreateDummyConfigFile(): void
     {
         $baseDir = dirname(__DIR__) . '/tmp';
         $configFile = $baseDir . '/wp-tests-config.php';

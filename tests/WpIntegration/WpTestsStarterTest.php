@@ -17,19 +17,10 @@ use WpTestsStarter\WpTestsStarter;
  */
 class WpTestsStarterTest extends TestCase
 {
-    /**
-     * @type string
-     */
-    private static $baseDir;
+    private static string $baseDir;
 
-    /**
-     * @type WpTestsStarter
-     */
-    private static $testee;
+    private static WpTestsStarter $testee;
 
-    /**
-     * runs once before all the tests
-     */
     public static function setUpBeforeClass(): void
     {
         self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
@@ -59,7 +50,7 @@ class WpTestsStarterTest extends TestCase
         self::$testee->setActivePlugin($test_plugin);
     }
 
-    public function testSetUp()
+    public function testSetUp(): void
     {
         self::assertNotEmpty(\DB_NAME);
         self::assertNotEmpty(\DB_USER);
@@ -71,10 +62,7 @@ class WpTestsStarterTest extends TestCase
         self::assertArrayHasKey('DB_USER', $definedConstants);
     }
 
-    /**
-     * @see WpTestsStarter::createDummyConfigFile()
-     */
-    public function testCreateDummyConfigFile()
+    public function testCreateDummyConfigFile(): void
     {
         $configFile = self::$baseDir . '/wp-tests-config.php';
         if (file_exists($configFile)) {
@@ -105,10 +93,7 @@ class WpTestsStarterTest extends TestCase
         unlink($configFile);
     }
 
-    /**
-     * @see WpTestsStarter::bootstrap()
-     */
-    public function testBootstrap()
+    public function testBootstrap(): void
     {
         self::$testee->bootstrap();
 
@@ -140,10 +125,9 @@ class WpTestsStarterTest extends TestCase
     }
 
     /**
-     * @see     WpTestsStarter::setActivePlugin()
      * @depends testBootstrap
      */
-    public function testSetActivePlugin()
+    public function testSetActivePlugin(): void
     {
         self::markTestIncomplete("Needs to be fixed");
         /**

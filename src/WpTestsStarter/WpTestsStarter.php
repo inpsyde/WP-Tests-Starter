@@ -4,40 +4,26 @@ declare(strict_types=1);
 
 namespace WpTestsStarter;
 
+use WpTestsStarter\Helper\SaltGenerator;
+
 class WpTestsStarter
 {
-    /**
-     * @type string
-     */
-    private $baseDir;
+    private string $baseDir;
+
+    private SaltGenerator $saltGenerator;
 
     /**
-     * @type Helper\SaltGenerator
+     * @type string[]
      */
-    private $saltGenerator;
+    private array $definedConstants = [];
 
     /**
-     * list of all by this class defined constants
-     *
-     * @type array
+     * @param string $baseDir Absolute path to the wordpress-develop repository
      */
-    private $definedConstants = [];
-
-    /**
-     * Pass the absolute path of the wordpress-dev package here.
-     * It is "$baseDir/vendor/inpsyde/wordpress-dev" if you're using
-     * the inpsyde/wordpress-dev package
-     *
-     * @param string $baseDir
-     * @param Helper\SaltGenerator $saltGenerator
-     */
-    public function __construct($baseDir, Helper\SaltGenerator $saltGenerator = null)
+    public function __construct(string $baseDir, ?SaltGenerator $saltGenerator = null)
     {
         $this->baseDir = rtrim($baseDir, '\\/');
-        if (!$saltGenerator) {
-            $saltGenerator = new Helper\SaltGenerator();
-        }
-        $this->saltGenerator = $saltGenerator;
+        $this->saltGenerator = $saltGenerator ?? new SaltGenerator();
     }
 
     /**
@@ -67,26 +53,21 @@ class WpTestsStarter
     }
 
     /**
-     * Define a given constant if it not already exists
-     *
-     * @param string $const
      * @param mixed $value
-     * @return bool
      */
-    public function defineConst($const, $value)
+    public function defineConst(string $const, $value): bool
     {
         if (defined($const)) {
+
             return false;
         }
 
         $this->definedConstants[$const] = $value;
+
         return define($const, $value);
     }
 
-    /**
-     * @param string $abspath
-     */
-    public function defineAbspath($abspath = '')
+    public function defineAbspath(?string $abspath = null): void
     {
         if (empty($abspath)) {
             $abspath = $this->baseDir . '/src/';
@@ -94,65 +75,41 @@ class WpTestsStarter
         $this->defineConst('ABSPATH', $abspath);
     }
 
-    /**
-     * @param string $dbName
-     */
-    public function defineDbName($dbName)
+    public function defineDbName(string $dbName): void
     {
         $this->defineConst('DB_NAME', $dbName);
     }
 
-    /**
-     * @param string $dbHost
-     */
-    public function defineDbHost($dbHost = 'localhost')
+    public function defineDbHost(string $dbHost = 'localhost'): void
     {
         $this->defineConst('DB_HOST', $dbHost);
     }
 
-    /**
-     * @param string $dbUser
-     */
-    public function defineDbUser($dbUser)
+    public function defineDbUser(string $dbUser): void
     {
         $this->defineConst('DB_USER', $dbUser);
     }
 
-    /**
-     * @param string $dbPassword
-     */
-    public function defineDbPassword($dbPassword)
+    public function defineDbPassword(string $dbPassword): void
     {
         $this->defineConst('DB_PASSWORD', $dbPassword);
     }
 
-    /**
-     * @param string $dbCharset
-     */
-    public function defineDbCharset($dbCharset = 'utf8')
+    public function defineDbCharset(string $dbCharset = 'utf8'): void
     {
         $this->defineConst('DB_CHARSET', $dbCharset);
     }
 
-    /**
-     * @param string $dbCollate
-     */
-    public function defineDbCollate($dbCollate = '')
+    public function defineDbCollate(string $dbCollate = ''): void
     {
         $this->defineConst('DB_COLLATE', $dbCollate);
     }
 
-    /**
-     * @param bool $wpDebug
-     */
-    public function defineWpDebug($wpDebug = false)
+    public function defineWpDebug(bool $wpDebug = false): void
     {
-        $this->defineConst('WP_DEBUG', (bool)$wpDebug);
+        $this->defineConst('WP_DEBUG', $wpDebug);
     }
 
-    /**
-     * define the security keys and salts
-     */
     public function defineSalts()
     {
         $saltConstants = [
@@ -174,83 +131,57 @@ class WpTestsStarter
         }
     }
 
-    /**
-     * @param string $domain
-     */
-    public function defineTestsDomain($domain = 'example.org')
+    public function defineTestsDomain(string $domain = 'example.org'): void
     {
         $this->defineConst('WP_TESTS_DOMAIN', $domain);
     }
 
-    /**
-     * @param string $email
-     */
-    public function defineTestsEmail($email = 'admin@example.org')
+    public function defineTestsEmail(string $email = 'admin@example.org'): void
     {
         $this->defineConst('WP_TESTS_EMAIL', $email);
     }
 
-    /**
-     * @param string $title
-     */
-    public function defineTestsTitle($title = 'Test Blog')
+    public function defineTestsTitle(string $title = 'Test Blog'): void
     {
         $this->defineConst('WP_TESTS_TITLE', $title);
     }
 
-    /**
-     * @param string $binary
-     */
-    public function definePhpBinary($binary = 'php')
+    public function definePhpBinary(string $binary = 'php'): void
     {
         $this->defineConst('WP_PHP_BINARY', $binary);
     }
 
-    /**
-     * @param string $lang
-     */
-    public function defineWpLang($lang = '')
+    public function defineWpLang(string $lang = ''): void
     {
         $this->defineConst('WPLANG', $lang);
     }
 
-    /**
-     * @param bool $flag
-     */
-    public function defineTestForceKnownBugs($flag)
+    public function defineTestForceKnownBugs(bool $flag): void
     {
-        $this->defineConst('WP_TESTS_FORCE_KNOWN_BUGS', (bool)$flag);
+        $this->defineConst('WP_TESTS_FORCE_KNOWN_BUGS', $flag);
     }
 
-    /**
-     * @param $flag
-     */
-    public function defineTestMultisite($flag)
+    public function defineTestMultisite(bool $flag): void
     {
-        $this->defineConst('WP_TESTS_MULTISITE', (bool)$flag);
+        $this->defineConst('WP_TESTS_MULTISITE', $flag);
     }
 
-    /**
-     * @param string $dir
-     */
-    public function defineWpPluginDir($dir)
+    public function defineWpPluginDir(string $dir): void
     {
         $dir = rtrim($dir, '\\/');
         $this->defineConst('WP_PLUGIN_DIR', $dir);
     }
 
     /**
-     * pass a plugin slug like 'directory/plugin-file.php'
-     *
-     * @param string $plugin
+     * @param string $plugin a plugin file relative to WP's plugin directory like 'directory/plugin-file.php'
      */
-    public function setActivePlugin($plugin)
+    public function setActivePlugin(string $plugin): void
     {
-        if (!isset($GLOBALS['wp_tests_options'])) {
+        if (! isset($GLOBALS['wp_tests_options'])) {
             $GLOBALS['wp_tests_options'] = [];
         }
 
-        if (!isset($GLOBALS['wp_tests_options']['active_plugins'])) {
+        if (! isset($GLOBALS['wp_tests_options']['active_plugins'])) {
             $GLOBALS['wp_tests_options']['active_plugins'] = [];
         }
 
@@ -261,43 +192,30 @@ class WpTestsStarter
         $GLOBALS['wp_tests_options']['active_plugins'][] = $plugin;
     }
 
-    /**
-     * @param string $prefix
-     */
-    public function setTablePrefix($prefix = 'wptests_')
+    public function setTablePrefix(string $prefix = 'wptests_'): void
     {
         $var = 'table_prefix';
         $this->setGlobal($var, $prefix);
     }
 
     /**
-     * @param $var
-     * @param $value
+     * @param mixed $value
      */
-    public function setGlobal($var, $value)
+    public function setGlobal(string $var, $value): void
     {
         $GLOBALS[$var] = $value;
     }
 
-    /**
-     * the WordPress bootstrap process does not allow
-     * to define a custom path of the config but looks
-     * for this file. so we create just an empty one.
-     */
     public function createDummyConfigFile()
     {
         $configFile = $this->getConfigFile();
-        if (!file_exists($configFile)) {
+        if (! file_exists($configFile)) {
             touch($configFile);
         }
 
         /**
-         * the WordPress testing bootstrap requires the definitions
-         * of all these content in exactly this file, there's no way
-         * to dynamically define these constants as
-         * tests/phpunit/includes/bootstrap.php triggers a system() call to
-         * tests/phpunit/includes/install.php with a static path to the
-         * config file
+         * We have to persist all dynamic configuration (constants and globals) in a wp-config.php
+         * as the WordPress internal boostrap process runs a sub process for the installation (setup DB tables)
          */
         $constantsDefinition = $this->getDefinedConstantsCode();
         $content = <<<PHP
@@ -309,26 +227,20 @@ PHP;
         file_put_contents($configFile, $content, LOCK_EX);
     }
 
-    /**
-     * @return string
-     */
-    public function getConfigFile()
+    public function getConfigFile(): string
     {
         return $this->baseDir . '/wp-tests-config.php';
     }
 
-        /**
-         * @return array
-         */
-    public function getDefinedConstants()
+    /**
+     * @return string[]
+     */
+    public function getDefinedConstants(): array
     {
         return $this->definedConstants;
     }
 
-        /**
-         * that feels so ugly
-         */
-    public function getDefinedConstantsCode()
+    public function getDefinedConstantsCode(): string
     {
         $code = '';
         foreach ($this->definedConstants as $constant => $value) {
@@ -341,10 +253,7 @@ PHP;
         return $code;
     }
 
-        /**
-         * that feels even more ugly
-         */
-    public function escapePhpString($value)
+    public function escapePhpString($value): string
     {
         $value = str_replace(
             ['<?php', '<?', '?>'],

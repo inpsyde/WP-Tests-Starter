@@ -12,10 +12,8 @@ class WpTestsStarterDefaultConstantsTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testBoostrapWithDefaultConstants()
+    public function testBoostrapWithDefaultConstants(): void
     {
-        #$this->markTestIncomplete();
-
         $baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
         $testee = new WpTestsStarter($baseDir);
 

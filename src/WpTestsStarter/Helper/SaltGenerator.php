@@ -8,12 +8,10 @@ class SaltGenerator
 {
     /**
      * Generates random strings using all ascii chars between
-     * 32 (Space) and 126 (~)
-     *
-     * @param int $length
-     * @return string
+     * 32 (Space) and 126 (~). Note that this is all but secure and
+     * is only meant to be used during automated tests
      */
-    public function generateSalt($length = 40)
+    public function generateSalt(int $length = 40): string
     {
         $salt = '';
         for ($i = 1; $i <= $length; $i++) {
