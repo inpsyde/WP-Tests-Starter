@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test\WpIntegration;
+namespace Inpsyde\WpTestsStarter\Test\WpIntegration;
 
 use PHPUnit\Framework\TestCase;
-use WpTestsStarter\Helper\DbUrlParser;
-use WpTestsStarter\WpTestsStarter;
+use Inpsyde\WpTestsStarter\Helper\DbUrlParser;
+use Inpsyde\WpTestsStarter\WpTestsStarter;
 
 class WpTestsStarterAlternativeConfigTest extends TestCase
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test\Unit\Helper;
+namespace Inpsyde\WpTestsStarter\Test\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
-use WpTestsStarter\Exception\RuntimeException;
-use WpTestsStarter\Helper\DbUrlParser;
+use Inpsyde\WpTestsStarter\Exception\RuntimeException;
+use Inpsyde\WpTestsStarter\Helper\DbUrlParser;
 
 
 class DbUrlParserTest extends TestCase

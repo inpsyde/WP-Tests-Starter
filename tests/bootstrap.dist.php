@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test;
+namespace Inpsyde\WpTestsStarter\Test;
 
 /**
  * define your local bootstrap file if you want

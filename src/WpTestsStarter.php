@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter;
+namespace Inpsyde\WpTestsStarter;
 
-use WpTestsStarter\Helper\DbUrlParser;
-use WpTestsStarter\Helper\SaltGenerator;
+use Inpsyde\WpTestsStarter\Helper\DbUrlParser;
+use Inpsyde\WpTestsStarter\Helper\SaltGenerator;
 
 class WpTestsStarter
 {

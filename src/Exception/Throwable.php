@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Exception;
+namespace Inpsyde\WpTestsStarter\Exception;
 
 interface Throwable extends \Throwable
 {

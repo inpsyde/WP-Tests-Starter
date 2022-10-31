@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test\Unit\Helper;
+namespace Inpsyde\WpTestsStarter\Test\Unit\Helper;
 
 use PHPUnit\Framework\TestCase;
-use WpTestsStarter\Helper;
+use Inpsyde\WpTestsStarter\Helper;
 
 class SaltGeneratorTest extends TestCase
 {

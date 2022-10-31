@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Helper;
+namespace Inpsyde\WpTestsStarter\Helper;
 
-use WpTestsStarter\Exception\RuntimeException;
+use Inpsyde\WpTestsStarter\Exception\RuntimeException;
 
 class DbUrlParser
 {

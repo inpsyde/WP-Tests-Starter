@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Helper;
+namespace Inpsyde\WpTestsStarter\Helper;
 
 class SaltGenerator
 {

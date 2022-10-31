@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace WpTestsStarter\Test\Unit;
+namespace Inpsyde\WpTestsStarter\Test\Unit;
 
 use PHPUnit\Framework\TestCase;
-use WpTestsStarter\WpTestsStarter;
+use Inpsyde\WpTestsStarter\WpTestsStarter;
 
 class WpTestsStarterTest extends TestCase
 {
