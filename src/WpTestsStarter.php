@@ -355,7 +355,7 @@ PHP;
         $value = str_replace(
             ['<?php', '<?', '?>'],
             '',
-            $value
+            (string) $value
         );
         $value = addcslashes($value, "'\\");
 
