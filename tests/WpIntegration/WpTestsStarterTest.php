@@ -9,28 +9,28 @@ use WpTestsStarter\WpTestsStarter;
 
 class WpTestsStarterTest extends TestCase
 {
-    private static string $baseDir;
+    private static string $wpBaseDir;
 
-    private static WpTestsStarter $testee;
+    private static string $pluginDir;
+
+    private static string $testPlugin;
 
     public static function setUpBeforeClass(): void
     {
-        self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
-        self::$testee = new WpTestsStarter(
-            self::$baseDir,
-            getenv('WPTS_DB_URL')
-        );
-
-        // test plugin loading
-        $plugin_test_dir = dirname(__DIR__) . '/tmp';
-        $test_plugin = 'plugin/test-plugin.php';
-        self::$testee->useWpPluginDir($plugin_test_dir);
-        self::$testee->addActivePlugin($test_plugin);
+        self::$wpBaseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
+        self::$pluginDir = dirname(__DIR__) . '/plugins';
+        self::$testPlugin = 'test-plugin.php';
     }
 
     public function testBootstrap(): void
     {
-        self::$testee->bootstrap();
+        $testee = new WpTestsStarter(
+            self::$wpBaseDir,
+            getenv('WPTS_DB_URL')
+        );
+        $testee->useWpPluginDir(self::$pluginDir)
+            ->addActivePlugin(self::$testPlugin)
+            ->bootstrap();
 
         // test if the environment is available
         self::assertTrue(
@@ -38,11 +38,24 @@ class WpTestsStarterTest extends TestCase
             'Class \WP_UnitTestCase does not exist.'
         );
 
+        $this->wpDbAssertions();
+        $this->installedAssertions();
+        $this->pluginAssertions();
+    }
+
+    private function wpDbAssertions(): void
+    {
         self::assertInstanceOf(
             \wpdb::class,
             $GLOBALS['wpdb']
         );
+        self::assertTrue(
+            $GLOBALS['wpdb']->check_connection()
+        );
+    }
 
+    private function installedAssertions(): void
+    {
         $dbTables = $GLOBALS['wpdb']->get_results(
             'SHOW TABLES',
             \ARRAY_N
@@ -59,15 +72,22 @@ class WpTestsStarterTest extends TestCase
         );
     }
 
-    /**
-     * @depends testBootstrap
-     */
-    public function testSetActivePlugin(): void
+    private function pluginAssertions(): void
     {
-        self::assertArrayHasKey('wp_tests_options', $GLOBALS);
-        self::assertArrayHasKey('active_plugins', $GLOBALS['wp_tests_options']);
-        self::assertContains('plugin/test-plugin.php', $GLOBALS['wp_tests_options']['active_plugins']);
-
-        //Todo: assert that the plugin really got loaded
+        self::assertArrayHasKey(
+            'wp_tests_options',
+            $GLOBALS
+        );
+        self::assertArrayHasKey(
+            'active_plugins',
+            $GLOBALS['wp_tests_options']
+        );
+        self::assertContains(
+            self::$testPlugin,
+            $GLOBALS['wp_tests_options']['active_plugins']
+        );
+        self::assertTrue(
+            defined('WPTS_TEST_PLUGIN_LOADED')
+        );
     }
 }

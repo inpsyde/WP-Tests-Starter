@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use WpTestsStarter\Helper\DbUrlParser;
 use WpTestsStarter\WpTestsStarter;
 
-class WpTestsStarterDefaultConstantsTest extends TestCase
+class WpTestsStarterAlternativeConfigTest extends TestCase
 {
     /**
      * @runInSeparateProcess
@@ -23,7 +23,9 @@ class WpTestsStarterDefaultConstantsTest extends TestCase
         );
         $testee->bootstrap();
 
-        $this->assertFileExists($wpTestConfig);
+        self::assertFileExists(
+            $wpTestConfig
+        );
         $config_data = file_get_contents($wpTestConfig);
 
         self::assertMatchesRegularExpression(
@@ -61,7 +63,9 @@ class WpTestsStarterDefaultConstantsTest extends TestCase
         $credentials['collation'] and $testee->useDbCollation($credentials['collation']);
         $testee->bootstrap();
 
-        $this->assertFileExists($wpTestConfig);
+        self::assertFileExists(
+            $wpTestConfig
+        );
         $config_data = file_get_contents($wpTestConfig);
 
         self::assertMatchesRegularExpression(
