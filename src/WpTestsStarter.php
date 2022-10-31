@@ -76,8 +76,8 @@ class WpTestsStarter
 
     public function useGlobalVar(string $var, $value): self
     {
-        $this->globalsFactories[] = static function (array &$globals) use ($var, $value): void {
-            $globals[$var] = $value;
+        $this->globalsFactories[] = static function () use ($var, $value): void {
+            $GLOBALS[$var] = $value;
         };
 
         return $this;
@@ -265,7 +265,7 @@ PHP;
     private function declareGlobals(): void
     {
         foreach ($this->globalsFactories as $factory) {
-            $factory($GLOBALS);
+            $factory();
         }
     }
 
