@@ -27,70 +27,19 @@ class WpTestsStarterTest extends TestCase
         self::$testee = new WpTestsStarter(self::$baseDir);
 
         // defined in phpunit-integration.xml
-        self::$testee->defineDbName(Db\NAME);
-        self::$testee->defineDbUser(Db\USER);
-        self::$testee->defineDbPassword(Db\PASSWORD);
-        self::$testee->defineDbHost(Db\HOST);
-        self::$testee->defineDbCharset(Db\CHARSET);
-        self::$testee->defineDbCollate(Db\COLLATE);
-        self::$testee->setTablePrefix(Db\TABLE_PREFIX);
-
-        self::$testee->defineAbspath();
-        self::$testee->definePhpBinary();
-        self::$testee->defineWpLang();
-        self::$testee->defineWpDebug();
-        self::$testee->defineTestsDomain();
-        self::$testee->defineTestsEmail();
-        self::$testee->defineTestsTitle();
+        self::$testee->useDbName(Db\NAME);
+        self::$testee->useDbUser(Db\USER);
+        self::$testee->useDbPassword(Db\PASSWORD);
+        self::$testee->useDbHost(Db\HOST);
+        self::$testee->useDbCharset(Db\CHARSET);
+        self::$testee->useDbCollation(Db\COLLATE);
+        self::$testee->useTablePrefix(Db\TABLE_PREFIX);
 
         // test plugin loading
         $plugin_test_dir = dirname(__DIR__) . '/tmp';
         $test_plugin = 'plugin/test-plugin.php';
-        self::$testee->defineWpPluginDir($plugin_test_dir);
-        self::$testee->setActivePlugin($test_plugin);
-    }
-
-    public function testSetUp(): void
-    {
-        self::assertNotEmpty(\DB_NAME);
-        self::assertNotEmpty(\DB_USER);
-        self::assertNotEmpty($GLOBALS['table_prefix']);
-
-        $definedConstants = self::$testee->getDefinedConstants();
-
-        self::assertArrayHasKey('DB_NAME', $definedConstants);
-        self::assertArrayHasKey('DB_USER', $definedConstants);
-    }
-
-    public function testCreateDummyConfigFile(): void
-    {
-        $configFile = self::$baseDir . '/wp-tests-config.php';
-        if (file_exists($configFile)) {
-            unlink($configFile);
-        }
-
-        self::$testee->createDummyConfigFile();
-        $fileContent = file_get_contents($configFile);
-
-        self::assertStringEndsWith(
-            self::$testee->getDefinedConstantsCode(),
-            $fileContent
-        );
-
-        $definedConstants = self::$testee->getDefinedConstants();
-        foreach ($definedConstants as $name => $value) {
-            $pattern = sprintf(
-                "~define\(\s*'%s',\s*'%s'\s*\);~",
-                preg_quote(self::$testee->escapePhpString($name)),
-                preg_quote(self::$testee->escapePhpString($value))
-            );
-            self::assertMatchesRegularExpression(
-                $pattern,
-                $fileContent
-            );
-        }
-
-        unlink($configFile);
+        self::$testee->useWpPluginDir($plugin_test_dir);
+        self::$testee->addActivePlugin($test_plugin);
     }
 
     public function testBootstrap(): void
@@ -99,12 +48,12 @@ class WpTestsStarterTest extends TestCase
 
         // test if the environment is available
         self::assertTrue(
-            class_exists('\WP_UnitTestCase'),
+            class_exists(\WP_UnitTestCase::class),
             'Class \WP_UnitTestCase does not exist.'
         );
 
         self::assertInstanceOf(
-            '\wpdb',
+            \wpdb::class,
             $GLOBALS['wpdb']
         );
 
@@ -117,7 +66,7 @@ class WpTestsStarterTest extends TestCase
             $tablesFlat[] = $row[0];
         }
 
-        $optionTable = Db\TABLE_PREFIX . 'options';
+        $optionTable = $GLOBALS['table_prefix'] . 'options';
         self::assertTrue(
             in_array($optionTable, $tablesFlat),
             "Table {$optionTable} does not exist!"
@@ -129,13 +78,10 @@ class WpTestsStarterTest extends TestCase
      */
     public function testSetActivePlugin(): void
     {
-        self::markTestIncomplete("Needs to be fixed");
-        /**
-         * @see tmp/plugin/test-plugin.php
-         */
-        self::assertTrue(
-            defined('WP_TEST_STARTER_TEST_PLUGIN'),
-            'Test plugin file seemed not loaded.'
-        );
+        self::assertArrayHasKey('wp_tests_options', $GLOBALS);
+        self::assertArrayHasKey('active_plugins', $GLOBALS['wp_tests_options']);
+        self::assertContains('plugin/test-plugin.php', $GLOBALS['wp_tests_options']['active_plugins']);
+
+        //Todo: assert that the plugin really got loaded
     }
 }

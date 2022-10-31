@@ -13,9 +13,11 @@ class WpTestsStarter
     private SaltGenerator $saltGenerator;
 
     /**
-     * @type string[]
+     * @var callable[]
      */
-    private array $definedConstants = [];
+    private array $globalsFactories = [];
+
+    private array $constants = [];
 
     /**
      * @param string $baseDir Absolute path to the wordpress-develop repository
@@ -24,6 +26,16 @@ class WpTestsStarter
     {
         $this->baseDir = rtrim($baseDir, '\\/');
         $this->saltGenerator = $saltGenerator ?? new SaltGenerator();
+
+        // set some common defaults
+        $this->useDbHost('localhost')
+            ->useSiteDomain('example.tld')
+            ->useEmail('admin@example.tld')
+            ->useSiteTitle('Wp Tests Starter')
+            ->usePhpBinary('/usr/bin/php')
+            ->useTablePrefix('wp_tests_')
+            ->useAbspath($this->baseDir . '/src/')
+            ->generateSalts();
     }
 
     /**
@@ -31,86 +43,150 @@ class WpTestsStarter
      */
     public function bootstrap()
     {
-        // define required constants if they not exists
-        $this->defineDbHost();
-        $this->defineDbCharset();
-        $this->defineDbCollate();
-
-        $this->defineTestsDomain();
-        $this->defineTestsEmail();
-        $this->defineTestsTitle();
-
-        $this->defineWpLang();
-        $this->definePhpBinary();
-        $this->defineWpDebug();
-
-        $this->defineAbspath();
-
-        $this->createDummyConfigFile();
+        $this->defineConstants();
+        $this->declareGlobals();
+        $this->writeConfigFile();
 
         $wpBoostrapFile = $this->baseDir . '/tests/phpunit/includes/bootstrap.php';
         require_once $wpBoostrapFile;
     }
 
+    public function useConst(string $const, $value): self
+    {
+        $this->constants[$const] = $value;
+
+        return $this;
+    }
+
+    public function useGlobalVar(string $var, $value): self
+    {
+        $this->globalsFactories[] = static function (array &$globals) use ($var, $value): void {
+            $globals[$var] = $value;
+        };
+
+        return $this;
+    }
+
+    public function useAbspath(?string $abspath = null): self
+    {
+        return $this->useConst('ABSPATH', $abspath);
+    }
+
+    public function useDbName(string $dbName): self
+    {
+        return $this->useConst('DB_NAME', $dbName);
+    }
+
+    public function useDbHost(string $dbHost): self
+    {
+        return $this->useConst('DB_HOST', $dbHost);
+    }
+
+    public function useDbUser(string $dbUser): self
+    {
+        return $this->useConst('DB_USER', $dbUser);
+    }
+
+    public function useDbPassword(string $dbPassword): self
+    {
+        return $this->useConst('DB_PASSWORD', $dbPassword);
+    }
+
+    public function useDbCharset(string $dbCharset): self
+    {
+        return $this->useConst('DB_CHARSET', $dbCharset);
+    }
+
+    public function useDbCollation(string $dbCollation): self
+    {
+        return $this->useConst('DB_COLLATE', $dbCollation);
+    }
+
+    public function useDebugMode(bool $wpDebug): self
+    {
+        return $this->useConst('WP_DEBUG', $wpDebug);
+    }
+
+    public function useSiteDomain(string $domain): self
+    {
+        return $this->useConst('WP_TESTS_DOMAIN', $domain);
+    }
+
+    public function useEmail(string $email): self
+    {
+        return $this->useConst('WP_TESTS_EMAIL', $email);
+    }
+
+    public function useSiteTitle(string $title): self
+    {
+        return $this->useConst('WP_TESTS_TITLE', $title);
+    }
+
+    public function usePhpBinary(string $binary): self
+    {
+        return $this->useConst('WP_PHP_BINARY', $binary);
+    }
+
+    public function testAsMultisite(bool $isMultisite): self
+    {
+        return $this->useConst('WP_TESTS_MULTISITE', $isMultisite);
+    }
+
+    public function useWpPluginDir(string $dir): self
+    {
+        $dir = rtrim($dir, '\\/');
+
+        return $this->useConst('WP_PLUGIN_DIR', $dir);
+    }
+
     /**
-     * @param mixed $value
+     * @param string $plugin a plugin file relative to WP's plugin directory like 'directory/plugin-file.php'
      */
-    public function defineConst(string $const, $value): bool
+    public function addActivePlugin(string $plugin): self
     {
-        if (defined($const)) {
+        $this->globalsFactories[] = static function () use ($plugin): void {
+            if (! isset($GLOBALS['wp_tests_options'])) {
+                $GLOBALS['wp_tests_options'] = [];
+            }
 
-            return false;
+            if (! isset($GLOBALS['wp_tests_options']['active_plugins'])) {
+                $GLOBALS['wp_tests_options']['active_plugins'] = [];
+            }
+
+            if (in_array($plugin, $GLOBALS['wp_tests_options']['active_plugins'])) {
+                return;
+            }
+
+            $GLOBALS['wp_tests_options']['active_plugins'][] = $plugin;
+        };
+
+        return $this;
+    }
+
+    public function useTablePrefix(string $prefix): self
+    {
+        return $this->useGlobalVar('table_prefix', $prefix);
+    }
+
+    private function defineConstants(): void
+    {
+        foreach ($this->constants as $constant => $value) {
+            if (defined($constant)) {
+                continue;
+            }
+
+            define($constant, $value);
         }
-
-        $this->definedConstants[$const] = $value;
-
-        return define($const, $value);
     }
 
-    public function defineAbspath(?string $abspath = null): void
+    private function declareGlobals(): void
     {
-        if (empty($abspath)) {
-            $abspath = $this->baseDir . '/src/';
+        foreach ($this->globalsFactories as $factory) {
+            $factory($GLOBALS);
         }
-        $this->defineConst('ABSPATH', $abspath);
     }
 
-    public function defineDbName(string $dbName): void
-    {
-        $this->defineConst('DB_NAME', $dbName);
-    }
-
-    public function defineDbHost(string $dbHost = 'localhost'): void
-    {
-        $this->defineConst('DB_HOST', $dbHost);
-    }
-
-    public function defineDbUser(string $dbUser): void
-    {
-        $this->defineConst('DB_USER', $dbUser);
-    }
-
-    public function defineDbPassword(string $dbPassword): void
-    {
-        $this->defineConst('DB_PASSWORD', $dbPassword);
-    }
-
-    public function defineDbCharset(string $dbCharset = 'utf8'): void
-    {
-        $this->defineConst('DB_CHARSET', $dbCharset);
-    }
-
-    public function defineDbCollate(string $dbCollate = ''): void
-    {
-        $this->defineConst('DB_COLLATE', $dbCollate);
-    }
-
-    public function defineWpDebug(bool $wpDebug = false): void
-    {
-        $this->defineConst('WP_DEBUG', $wpDebug);
-    }
-
-    public function defineSalts()
+    private function generateSalts()
     {
         $saltConstants = [
             'AUTH_KEY',
@@ -124,89 +200,14 @@ class WpTestsStarter
         ];
 
         foreach ($saltConstants as $constant) {
-            $this->defineConst(
+            $this->useConst(
                 $constant,
                 $this->saltGenerator->generateSalt()
             );
         }
     }
 
-    public function defineTestsDomain(string $domain = 'example.org'): void
-    {
-        $this->defineConst('WP_TESTS_DOMAIN', $domain);
-    }
-
-    public function defineTestsEmail(string $email = 'admin@example.org'): void
-    {
-        $this->defineConst('WP_TESTS_EMAIL', $email);
-    }
-
-    public function defineTestsTitle(string $title = 'Test Blog'): void
-    {
-        $this->defineConst('WP_TESTS_TITLE', $title);
-    }
-
-    public function definePhpBinary(string $binary = 'php'): void
-    {
-        $this->defineConst('WP_PHP_BINARY', $binary);
-    }
-
-    public function defineWpLang(string $lang = ''): void
-    {
-        $this->defineConst('WPLANG', $lang);
-    }
-
-    public function defineTestForceKnownBugs(bool $flag): void
-    {
-        $this->defineConst('WP_TESTS_FORCE_KNOWN_BUGS', $flag);
-    }
-
-    public function defineTestMultisite(bool $flag): void
-    {
-        $this->defineConst('WP_TESTS_MULTISITE', $flag);
-    }
-
-    public function defineWpPluginDir(string $dir): void
-    {
-        $dir = rtrim($dir, '\\/');
-        $this->defineConst('WP_PLUGIN_DIR', $dir);
-    }
-
-    /**
-     * @param string $plugin a plugin file relative to WP's plugin directory like 'directory/plugin-file.php'
-     */
-    public function setActivePlugin(string $plugin): void
-    {
-        if (! isset($GLOBALS['wp_tests_options'])) {
-            $GLOBALS['wp_tests_options'] = [];
-        }
-
-        if (! isset($GLOBALS['wp_tests_options']['active_plugins'])) {
-            $GLOBALS['wp_tests_options']['active_plugins'] = [];
-        }
-
-        if (in_array($plugin, $GLOBALS['wp_tests_options']['active_plugins'])) {
-            return;
-        }
-
-        $GLOBALS['wp_tests_options']['active_plugins'][] = $plugin;
-    }
-
-    public function setTablePrefix(string $prefix = 'wptests_'): void
-    {
-        $var = 'table_prefix';
-        $this->setGlobal($var, $prefix);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setGlobal(string $var, $value): void
-    {
-        $GLOBALS[$var] = $value;
-    }
-
-    public function createDummyConfigFile()
+    private function writeConfigFile()
     {
         $configFile = $this->getConfigFile();
         if (! file_exists($configFile)) {
@@ -227,23 +228,15 @@ PHP;
         file_put_contents($configFile, $content, LOCK_EX);
     }
 
-    public function getConfigFile(): string
+    private function getConfigFile(): string
     {
         return $this->baseDir . '/wp-tests-config.php';
     }
 
-    /**
-     * @return string[]
-     */
-    public function getDefinedConstants(): array
-    {
-        return $this->definedConstants;
-    }
-
-    public function getDefinedConstantsCode(): string
+    private function getDefinedConstantsCode(): string
     {
         $code = '';
-        foreach ($this->definedConstants as $constant => $value) {
+        foreach ($this->constants as $constant => $value) {
             $constant = $this->escapePhpString($constant);
             $value = $this->escapePhpString($value);
             $code .= "if ( ! defined( '{$constant}' ) )\n";
@@ -253,7 +246,7 @@ PHP;
         return $code;
     }
 
-    public function escapePhpString($value): string
+    private function escapePhpString($value): string
     {
         $value = str_replace(
             ['<?php', '<?', '?>'],

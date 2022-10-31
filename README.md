@@ -42,7 +42,7 @@ $starter = new WpTestsStarter( '/path/to/your-project/vendor/inpsyde/wordpress-d
 $starter->defineDbName( 'your-test-db' );
 $starter->defineDbUser( 'your-test-user' );
 $starter->defineDbPassword( 'your-test-user' );
-$starter->setTablePrefix( 'your_table_prefix_' );
+$starter->useTablePrefix( 'your_table_prefix_' );
 
 // This will finally include the WordPress test bootstrap
 $starter->bootstrap();
@@ -154,7 +154,7 @@ $starter = new WpTestsStarter( "{$base_dir}/vendor/inpsyde/wordpress-dev" );
 $starter->defineDbName( DB_NAME );
 $starter->defineDbUser( DB_USER );
 $starter->defineDbPassword( DB_PASSWORD );
-$starter->setTablePrefix( DB_TABLE_PREFIX );
+$starter->useTablePrefix( DB_TABLE_PREFIX );
 
 // this will finally create the wp-tests-config.php and include the wordpress core tests bootstrap
 $starter->bootstrap();
