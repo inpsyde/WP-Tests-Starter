@@ -10,7 +10,7 @@ class DbUrlParser
 {
 
     /**
-     * Parses a URL like mysql://user:password@host/database?table_prefix=wp_&charset=utf8mb4
+     * Parses a URL like mysql://user:password@host/database?table_prefix=wp_&charset=utf8mb4&collation=utf8_general_ci
      * all parts are optional
      *
      * @return array{
@@ -19,7 +19,8 @@ class DbUrlParser
      *      password: ?string,
      *      db: ?string,
      *      table_prefix: ?string,
-     *      charset: ?string
+     *      charset: ?string,
+     *      collation: ?string
      * }
      */
     public function parse(string $dbUrl): array
@@ -31,6 +32,7 @@ class DbUrlParser
             'db' => null,
             'table_prefix' => null,
             'charset' => null,
+            'collation' => null,
         ];
 
         $parts = parse_url($dbUrl);
@@ -56,6 +58,7 @@ class DbUrlParser
 
         array_key_exists('table_prefix', $query) and $credentials['table_prefix'] = $query['table_prefix'];
         array_key_exists('charset', $query) and $credentials['charset'] = $query['charset'];
+        array_key_exists('collation', $query) and $credentials['collation'] = $query['collation'];
 
         return $credentials;
     }

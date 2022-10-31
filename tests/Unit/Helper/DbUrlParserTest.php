@@ -30,7 +30,7 @@ class DbUrlParserTest extends TestCase
     {
 
         yield 'Test entire parameter set' => [
-            'dbUrl' => 'mysql://john:T0p3ecr3t@localhost/wordpress?table_prefix=wp_tests_&charset=iso88591',
+            'dbUrl' => 'mysql://john:T0p3ecr3t@localhost/wordpress?table_prefix=wp_tests_&charset=iso88591&collation=latin1_swedish_ci',
             'expected' => [
                 'user' => 'john',
                 'host' => 'localhost',
@@ -38,6 +38,7 @@ class DbUrlParserTest extends TestCase
                 'db' => 'wordpress',
                 'table_prefix' => 'wp_tests_',
                 'charset' => 'iso88591',
+                'collation' => 'latin1_swedish_ci'
             ]
         ];
 
@@ -50,6 +51,7 @@ class DbUrlParserTest extends TestCase
                 'db' => null,
                 'table_prefix' => null,
                 'charset' => null,
+                'collation' => null,
             ]
         ];
 
@@ -62,6 +64,7 @@ class DbUrlParserTest extends TestCase
                 'db' => null,
                 'table_prefix' => null,
                 'charset' => null,
+                'collation' => null,
             ]
         ];
     }

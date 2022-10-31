@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WpTestsStarter;
 
+use WpTestsStarter\Helper\DbUrlParser;
 use WpTestsStarter\Helper\SaltGenerator;
 
 class WpTestsStarter
@@ -11,6 +12,8 @@ class WpTestsStarter
     private string $baseDir;
 
     private SaltGenerator $saltGenerator;
+
+    private DbUrlParser $dbUrlParser;
 
     /**
      * @var callable[]
@@ -22,10 +25,15 @@ class WpTestsStarter
     /**
      * @param string $baseDir Absolute path to the wordpress-develop repository
      */
-    public function __construct(string $baseDir, ?SaltGenerator $saltGenerator = null)
-    {
+    public function __construct(
+        string $baseDir,
+        ?string $dbUrl = '',
+        ?SaltGenerator $saltGenerator = null,
+        ?DbUrlParser $dbUrlParser = null
+    ) {
         $this->baseDir = rtrim($baseDir, '\\/');
         $this->saltGenerator = $saltGenerator ?? new SaltGenerator();
+        $this->dbUrlParser = $dbUrlParser ?? new DbUrlParser();
 
         // set some common defaults
         $this->useDbHost('localhost')
@@ -34,8 +42,10 @@ class WpTestsStarter
             ->useSiteTitle('Wp Tests Starter')
             ->usePhpBinary('/usr/bin/php')
             ->useTablePrefix('wp_tests_')
-            ->useAbspath($this->baseDir . '/src/')
+            ->useAbsPath($this->baseDir . '/src/')
             ->generateSalts();
+
+        $dbUrl and $this->useDbUrl($dbUrl);
     }
 
     /**
@@ -67,7 +77,22 @@ class WpTestsStarter
         return $this;
     }
 
-    public function useAbspath(?string $abspath = null): self
+    public function useDbUrl(string $dbUrl): self
+    {
+        $credentials = $this->dbUrlParser->parse($dbUrl);
+
+        $credentials['host'] and $this->useDbHost($credentials['host']);
+        $credentials['user'] and $this->useDbUser($credentials['user']);
+        $credentials['password'] and $this->useDbPassword($credentials['password']);
+        $credentials['db'] and $this->useDbName($credentials['db']);
+        $credentials['table_prefix'] and $this->useTablePrefix($credentials['table_prefix']);
+        $credentials['charset'] and $this->useDbCharset($credentials['charset']);
+        $credentials['collation'] and $this->useDbCollation($credentials['collation']);
+
+        return $this;
+    }
+
+    public function useAbsPath(?string $abspath = null): self
     {
         return $this->useConst('ABSPATH', $abspath);
     }

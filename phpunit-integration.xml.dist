@@ -1,23 +1,17 @@
 <phpunit
-	bootstrap="tests/bootstrap.dist.php"
-	backupGlobals="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	>
-	<php>
-		<const name="WpTestsStarter\Test\WpIntegration\Db\USER" value="db" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\NAME" value="test" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\PASSWORD" value="db" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\HOST" value="db" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\CHARSET" value="utf8" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\COLLATE" value="" />
-		<const name="WpTestsStarter\Test\WpIntegration\Db\TABLE_PREFIX" value="wp_test_" />
-	</php>
-	<testsuites>
-		<testsuite name="WpIntegrationTests">
-			<directory suffix="Test.php">./tests/WpIntegration</directory>
-		</testsuite>
-	</testsuites>
+    bootstrap="tests/bootstrap.dist.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+>
+    <php>
+        <env name="WPTS_DB_URL" value="mysql://db:db@db/test?table_prefix=wp_test_&amp;charset=utf8" />
+    </php>
+    <testsuites>
+        <testsuite name="WpIntegrationTests">
+            <directory suffix="Test.php">./tests/WpIntegration</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

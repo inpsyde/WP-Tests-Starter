@@ -7,14 +7,6 @@ namespace WpTestsStarter\Test\WpIntegration;
 use PHPUnit\Framework\TestCase;
 use WpTestsStarter\WpTestsStarter;
 
-/**
- * Class WpTestsStarterTest
- *
- * This test has to be in a completely different environment as the Constants are alredy
- * defined by during unit tests
- *
- * @package WpTestsStarter\Test\Integration
- */
 class WpTestsStarterTest extends TestCase
 {
     private static string $baseDir;
@@ -24,16 +16,10 @@ class WpTestsStarterTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         self::$baseDir = dirname(dirname(__DIR__)) . '/vendor/wordpress/wordpress';
-        self::$testee = new WpTestsStarter(self::$baseDir);
-
-        // defined in phpunit-integration.xml
-        self::$testee->useDbName(Db\NAME);
-        self::$testee->useDbUser(Db\USER);
-        self::$testee->useDbPassword(Db\PASSWORD);
-        self::$testee->useDbHost(Db\HOST);
-        self::$testee->useDbCharset(Db\CHARSET);
-        self::$testee->useDbCollation(Db\COLLATE);
-        self::$testee->useTablePrefix(Db\TABLE_PREFIX);
+        self::$testee = new WpTestsStarter(
+            self::$baseDir,
+            getenv('WPTS_DB_URL')
+        );
 
         // test plugin loading
         $plugin_test_dir = dirname(__DIR__) . '/tmp';
