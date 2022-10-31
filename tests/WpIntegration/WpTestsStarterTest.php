@@ -30,6 +30,9 @@ class WpTestsStarterTest extends TestCase
         );
         $testee->useWpPluginDir(self::$pluginDir)
             ->addActivePlugin(self::$testPlugin)
+            ->addLivePlugin(static function(): void {
+                defined('WPTS_LIVE_PLUGIN_RUN') or define('WPTS_LIVE_PLUGIN_RUN', true);
+            })
             ->bootstrap();
 
         // test if the environment is available
@@ -41,6 +44,7 @@ class WpTestsStarterTest extends TestCase
         $this->wpDbAssertions();
         $this->installedAssertions();
         $this->pluginAssertions();
+        $this->livePluginAssertions();
     }
 
     private function wpDbAssertions(): void
@@ -88,6 +92,16 @@ class WpTestsStarterTest extends TestCase
         );
         self::assertTrue(
             defined('WPTS_TEST_PLUGIN_LOADED')
+        );
+    }
+
+    private function livePluginAssertions(): void
+    {
+        self::assertFileExists(
+            WPMU_PLUGIN_DIR . '/wp-tests-starter-live-plugin.php'
+        );
+        self::assertTrue(
+            defined('WPTS_LIVE_PLUGIN_RUN')
         );
     }
 }

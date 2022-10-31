@@ -18,6 +18,11 @@ class WpTestsStarter
     /**
      * @var callable[]
      */
+    private static $livePlugins = [];
+
+    /**
+     * @var callable[]
+     */
     private array $globalsFactories = [];
 
     private array $constants = [];
@@ -56,6 +61,7 @@ class WpTestsStarter
         $this->defineConstants();
         $this->declareGlobals();
         $this->writeConfigFile();
+        $this->installLivePlugin();
 
         $wpBoostrapFile = $this->baseDir . '/tests/phpunit/includes/bootstrap.php';
         require_once $wpBoostrapFile;
@@ -188,9 +194,61 @@ class WpTestsStarter
         return $this;
     }
 
+    public function addLivePlugin(callable $plugin): self
+    {
+        self::$livePlugins[] = $plugin;
+
+        return $this;
+    }
+
     public function useTablePrefix(string $prefix): self
     {
         return $this->useGlobalVar('table_prefix', $prefix);
+    }
+
+    public static function runLivePlugins(): void
+    {
+        foreach(self::$livePlugins as $livePlugin) {
+            $livePlugin();
+        }
+    }
+
+    private function installLivePlugin(): void
+    {
+        if(!self::$livePlugins) {
+            return;
+        }
+
+        $pluginCode = <<<'PHP'
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Plugin Name: Wp Tests Starter live plugin
+ */
+namespace Inpsyde\WpTestsStarter;
+
+if (!class_exists(\Inpsyde\WpTestsStarter\WpTestsStarter::class)) {
+    return;
+}
+
+add_action(
+    'muplugins_loaded',
+    [\Inpsyde\WpTestsStarter\WpTestsStarter::class, 'runLivePlugins']
+);
+PHP;
+
+        $muPluginDir = $this->muPluginDir();
+        if(!is_dir($muPluginDir)) {
+            mkdir($muPluginDir, 0755, true);
+        }
+
+        $pluginFile = $muPluginDir . '/wp-tests-starter-live-plugin.php';
+        file_put_contents(
+            $pluginFile,
+            $pluginCode
+        );
     }
 
     private function defineConstants(): void
@@ -230,6 +288,27 @@ class WpTestsStarter
                 $this->saltGenerator->generateSalt()
             );
         }
+    }
+
+    private function muPluginDir(): ?string
+    {
+        if(defined('WPMU_PLUGIN_DIR')) {
+            return (string) WPMU_PLUGIN_DIR;
+        }
+
+        if(array_key_exists('WPMU_PLUGIN_DIR', $this->constants)) {
+            return (string) $this->constants['WPMU_PLUGIN_DIR'];
+        }
+
+        if(defined('WP_CONTENT_DIR')) {
+            return WP_CONTENT_DIR . '/mu-plugins';
+        }
+
+        if(array_key_exists('WP_CONTENT_DIR', $this->constants)) {
+            return $this->constants['WP_CONTENT_DIR'] . '/mu-plugins';
+        }
+
+        return $this->baseDir . '/src/wp-content/mu-plugins';
     }
 
     private function writeConfigFile()
