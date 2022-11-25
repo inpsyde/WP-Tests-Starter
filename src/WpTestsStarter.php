@@ -158,7 +158,7 @@ class WpTestsStarter
         return $this->useConst('WP_PHP_BINARY', $binary);
     }
 
-    public function testAsMultisite(bool $isMultisite): self
+    public function testAsMultisite(bool $isMultisite = true): self
     {
         return $this->useConst('WP_TESTS_MULTISITE', $isMultisite);
     }
