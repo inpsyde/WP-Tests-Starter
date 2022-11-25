@@ -14,25 +14,28 @@ public function testPersistBook(): void {
 
     $book = new Book('The Da Vinci Code', 'Dan Brown', '2003');
     $testee = new BookRepository($GLOBALS['wpdb']);
-    $testee->persist($book);
+    $testee->persist($book); // maps book to WP_Post object and post meta
 
     self::assertGreaterThan(0, $book->id());
 
     $wpPost = get_post($book->id());
 
     self::assertSame('The Da Vinci Code', $wpPost->post_title);
+    self::assertSame('2003', get_post_meta($book->id(), '_publishing_year', true));
+    self::assertSame('Dan Brown', get_post_meta($book->id(), '_author', true));
 }
 ```
 
 No mocks required. Just WordPress working inside a PHPUnit test case.
 
-## Setup
+## Installation
 
-In order to use Wp Tests Starter you need: a PHP environment with Composer and a MySQL server with a dedicated test database. You'll need the following three Composer packages installed as dev dependencies:
+In order to use Wp Tests Starter you need: a PHP environment with Composer and a MySQL server with a _dedicated test database_. This database should be completely ephemeral, so do not use any database that contains important data. You'll also need the following four Composer packages installed as dev dependencies:
 
 * `inpsyde/wp-tests-starter`
 * `yoast/phpunit-polyfills`
 * `wordpress/wordpress` taken from [wordpress-develop repository](https://github.com/inpsyde/wordpress-dev)
+* `phpunit/phpunit`
 
 As the last one is not available on packagist.org, you'll have to add the repo manually to your composer.json file by adding:
 
@@ -47,13 +50,120 @@ As the last one is not available on packagist.org, you'll have to add the repo m
 
 Now you can run
 
-    composer require --dev inpsyde/wp-tests-starter yoast/phpunit-polyfills wordpress/wordpress
+    composer require --dev inpsyde/wp-tests-starter yoast/phpunit-polyfills wordpress/wordpress phpunit/phpunit
 
 Note that this will take a while as Composer will analyze the entire WordPress repository on GitHub. (Once a composer.lock is in place it will go faster on the next install run)
 
+## Setup your tests
+
+To set up your PHPUnit tests you need two files in place: `phpunit.xml.dist` and a `boostrap.php` which gets loaded by
+PHPUnit before your actual tests are executed. The shown examples of these two files assume a directory structure of your
+library like this:
+
+    ├ src/
+    |  └ MyModule.php
+    ├ tests/
+    |  ├integration/
+    |  |  └ MyModuleTest.php
+    |  └boostrap.php
+    ├ vendor/
+    ├ composer.json
+    └ phpunit.xml.dist
+
+The following example of the phpunit.xml.dist file tells PHPUnit where the test files resides and contains the database
+credentials as an environment variable:
+
+```xml
+<phpunit
+    bootstrap="tests/bootstrap.dist.php"
+>
+    <php>
+        <env name="WPTS_DB_URL" value="mysql://user:password@host/db_name?table_prefix=wp_test_"/>
+    </php>
+    
+    <testsuites>
+        <testsuite name="integration">
+            <directory suffix="Test.php">./tests/integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+```
+
+The `tests/boostrap.php` finally loads Wp Tests Starter and WordPress:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace MyProject\Tests;
+
+use Inpsyde\WpTestsStarter\WpTestsStarter;
+
+$projectDir = dirname(__DIR__);
+
+require_once $projectDir . '/vendor/autoload.php';
+
+$starter = new WpTestsStarter(
+    $projectDir . '/vendor/wordpress/wordpress', // path to the WordPress library
+    getenv('WPTS_DB_URL') // Databse credentials in URL format, set in phpunit.xml.dist
+);
+
+// Some configuration:
+$starter
+    // Install WP core as multisite
+    ->testAsMultisite()
+    // boostrap your plugin or module code
+    ->addActivePlugin(static function()  {
+        (new MyModule())->init();
+    })
+    //finally load WordPress
+    ->bootstrap();
+```
+
+These files just show a short way to run integration tests with WP Tests Starter. You have several other configuration
+options available through the methods of the `WpTestsStarter` object.
+
+## Run PHPUnit
+
+With this configuration in place you can run PHPUnit to execute all test classes in `tests/integration` with
+
+    vendor/bin/phpunit
+
+On every run, WP Starter will write the configuration to `vendor/wordpress/wordpress/wp-config.php` and load the WordPress
+internal bootstrap script which ensures installation of the database tables for example.
+
 ## Configuration
 
-// Todo
+### DB Url
+
+In order to not have to maintain several environment variables you can pass all databse credentials and options via a
+single parameter like this:
+
+    mysql://user:password@localhost:3306/test_db?table_prefix=wp_tests_&charset=utf8mb4&collation=utf8_general_ci
+
+This URL can be passed to `WpTestsStarter` either by constructor parameter or by `useDbUrl()` method:
+
+```php
+<?php
+//either
+$starter = new WpTestsStarter($baseDir, $dbUrl);
+// or
+$starter->useDbUrl($dbUrl);
+```
+
+The URL example above would turn into the following WordPress constants and globals:
+
+```php
+<?php
+define('DB_HOST', 'localhost:3306');
+define('DB_USER', 'user');
+define('DB_PASSWORD', 'password');
+define('DB_NAME', 'test_db');
+define('DB_CHARSET', 'utf8mb4');
+define('DB_COLLATE', 'utf8_general_ci');
+$GLOBALS['table_prefix'] = 'wp_tests_'
+```
 
 ## License
 Good news, this plugin is free for everyone! Since it's released under this [License](LICENSE), you can use it free of
