@@ -3,6 +3,21 @@
 ## main
 * Introduces Changelog
 * Use new default branch `main`
+* Raise minimum PHP version to 7.4
+* Behavioral changes
+  * `WpTestsStarter::useConst()` does not define the constant immediately like `::defineConst()` did
+* API changes
+  * Remove `Common\SaltGeneratorInterface`
+  * Rename `Common\*` to `Helper\*`
+  * Introduce `Helper\DbUrlParser`
+  * Rename mutator methods `WpTestsStarter::set*()` and `::define*()` to `::use*()`
+  * Rename method `WpTestsStarter::defineConst()` to `::useConst()`
+  * Add method `WpTestsStarter::addLivePlugin()`
+* Internal refactoring
+  * Move phpunit*.xml.dist to root directory
+  * Reformat code
+  * Add DDEV as development environment
+  * Update dev dependencies
 
 ## 1.0.2
 * Add `WpTestsStarter::getConfigFile()`
