@@ -165,6 +165,16 @@ define('DB_COLLATE', 'utf8_general_ci');
 $GLOBALS['table_prefix'] = 'wp_tests_'
 ```
 
+Basically all the values of this URL are optional but keep in mind that you want to have a complete configuration
+for WordPress. Alternatively you can use explicit values:
+
+```php
+$starter
+    ->useDbHost('localhost')
+    ->useDbUser('user');
+    // and so on
+```
+
 ## License
 Good news, this plugin is free for everyone! Since it's released under this [License](LICENSE), you can use it free of
 charge on your personal or commercial website.

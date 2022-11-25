@@ -10,7 +10,7 @@ class DbUrlParser
 {
 
     /**
-     * Parses a URL like mysql://user:password@host/database?table_prefix=wp_&charset=utf8mb4&collation=utf8_general_ci
+     * Parses a URL like mysql://user:password@host/database:3306?table_prefix=wp_&charset=utf8mb4&collation=utf8_general_ci
      * all parts are optional
      *
      * @return array{
@@ -44,7 +44,13 @@ class DbUrlParser
             throw new RuntimeException("Currently only 'mysql' databases are supported");
         }
 
-        array_key_exists('host', $parts) and $credentials['host'] = $parts['host'];
+        if (array_key_exists('host', $parts)) {
+            $credentials['host'] = $parts['host'];
+            if (array_key_exists('port', $parts)) {
+                $credentials['host'] .= ':' . $parts['port'];
+            }
+        }
+
         array_key_exists('user', $parts) and $credentials['user'] = $parts['user'];
         array_key_exists('pass', $parts) and $credentials['password'] = $parts['pass'];
         array_key_exists('path', $parts) and $credentials['db'] = trim($parts['path'], '/');

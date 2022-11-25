@@ -42,6 +42,19 @@ class DbUrlParserTest extends TestCase
             ]
         ];
 
+        yield 'Test entire parameter set with port number' => [
+            'dbUrl' => 'mysql://john:T0p3ecr3t@localhost:3306/wordpress?table_prefix=wp_tests_&charset=iso88591&collation=latin1_swedish_ci',
+            'expected' => [
+                'user' => 'john',
+                'host' => 'localhost:3306',
+                'password' => 'T0p3ecr3t',
+                'db' => 'wordpress',
+                'table_prefix' => 'wp_tests_',
+                'charset' => 'iso88591',
+                'collation' => 'latin1_swedish_ci'
+            ]
+        ];
+
         yield 'Only user and host' => [
             'dbUrl' => 'mysql://john@localhost',
             'expected' => [
