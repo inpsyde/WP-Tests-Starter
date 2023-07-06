@@ -171,6 +171,31 @@ class WpTestsStarter
     }
 
     /**
+     * add actionq before WP core is loaded
+     */
+    public function addAction(string $action, callable $listener, int $priority): self
+    {
+        return $this->addFilter($action, $listener, $priority);
+    }
+
+    /**
+     * add filter before WP core is loaded
+     */
+    public function addFilter(string $filter, callable $listener, int $priority = 10): self
+    {
+        isset($GLOBALS['wp_filter']) or $GLOBALS['wp_filter'] = [];
+        isset($GLOBALS['wp_filter'][$filter]) or $GLOBALS['wp_filter'][$filter] = [];
+        isset($GLOBALS['wp_filter'][$filter][$priority]) or $GLOBALS['wp_filter'][$filter][$priority] = [];
+
+        $GLOBALS['wp_filter'][$filter][$priority][] = [
+            'accepted_args' => PHP_INT_MAX,
+            'function' => $listener
+        ];
+
+        return $this;
+    }
+
+    /**
      * @param string $plugin a plugin file relative to WP's plugin directory like 'directory/plugin-file.php'
      */
     public function addActivePlugin(string $plugin): self

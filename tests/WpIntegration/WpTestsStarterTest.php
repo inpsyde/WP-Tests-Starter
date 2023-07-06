@@ -28,11 +28,15 @@ class WpTestsStarterTest extends TestCase
             self::$wpBaseDir,
             getenv('WPTS_DB_URL')
         );
+
+        $dynamicListener = static fn($arg) => $arg;
         $testee->useWpPluginDir(self::$pluginDir)
             ->addActivePlugin(self::$testPlugin)
             ->addLivePlugin(static function(): void {
                 defined('WPTS_LIVE_PLUGIN_RUN') or define('WPTS_LIVE_PLUGIN_RUN', true);
             })
+            ->addFilter('post_link', $dynamicListener)
+            ->addAction('template_redirect', $dynamicListener, 30)
             ->bootstrap();
 
         // test if the environment is available
@@ -45,6 +49,7 @@ class WpTestsStarterTest extends TestCase
         $this->installedAssertions();
         $this->pluginAssertions();
         $this->livePluginAssertions();
+        $this->listenerAssertion($dynamicListener);
     }
 
     private function wpDbAssertions(): void
@@ -102,6 +107,23 @@ class WpTestsStarterTest extends TestCase
         );
         self::assertTrue(
             defined('WPTS_LIVE_PLUGIN_RUN')
+        );
+    }
+
+    private function listenerAssertion(callable $listener): void
+    {
+        self::assertSame(
+            10,
+            has_filter('post_link', $listener)
+        );
+        self::assertSame(
+            30,
+            has_action('template_redirect', $listener)
+        );
+        // test that we don't mess up the structure of $GLOBALS['wp_filter']
+        self::assertSame(
+            9,
+            has_filter('the_content', 'do_blocks')
         );
     }
 }

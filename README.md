@@ -117,6 +117,11 @@ $starter
     ->addActivePlugin(static function()  {
         (new MyModule())->init();
     })
+    // add filters early
+    ->addFilter('my_app.modules', static function(array $modules): array {
+        // whatever, it's just an example
+        return  $modules;
+    })
     //finally load WordPress
     ->bootstrap();
 ```
