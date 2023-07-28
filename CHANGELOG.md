@@ -13,6 +13,7 @@
   * Rename mutator methods `WpTestsStarter::set*()` and `::define*()` to `::use*()`
   * Rename method `WpTestsStarter::defineConst()` to `::useConst()`
   * Add method `WpTestsStarter::addLivePlugin()`
+  * Add methods `WpTestsStarter::addFilter()` and `::addAction()` to mimic `add_filter()` and `add_action()` before WP is loaded
 * Internal refactoring
   * Move phpunit*.xml.dist to root directory
   * Reformat code
