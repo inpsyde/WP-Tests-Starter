@@ -171,7 +171,7 @@ class WpTestsStarter
     }
 
     /**
-     * add actionq before WP core is loaded
+     * add action before WP core is loaded
      */
     public function addAction(string $action, callable $listener, int $priority): self
     {
