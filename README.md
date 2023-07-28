@@ -2,7 +2,7 @@
 Note: You're reading the documentation for the development branch towards version 2.0.0. You'll find the documentation
 for version 1.0 at the branch [version-1](https://github.com/inpsyde/WP-Tests-Starter/tree/version-1)
 
-Wp Tests starter is a library that assist you in setting up _integration tests_ of your plugin or library with WordPress
+Wp Tests starter is a library that assist you in setting up _integration tests_ for your plugin or library with WordPress
  core using the official [wordpress-develop repository](https://github.com/inpsyde/wordpress-dev). The main difference to
  unit tests is that you don't need (and typically don't want) to mock any WordPress function. Instead, you have a fully
  booted WordPress core in place with an actual connection to a database server.
