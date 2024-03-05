@@ -181,11 +181,7 @@ $starter
 ```
 
 ## License
-Good news, this plugin is free for everyone! Since it's released under this [License](LICENSE), you can use it free of
-charge on your personal or commercial website.
+This repository is a free software, and is released under the terms of the GNU General Public License version 2 or (at your option) any later version. See [LICENSE](./LICENSE) for complete license.
 
-## Created by Inpsyde
-
-Visit us at [inpsyde.com](http://inpsyde.com/).
 
 [Back to top](#wp-tests-starter)
