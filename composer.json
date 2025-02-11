@@ -6,11 +6,17 @@
         "Tests",
         "Integration tests"
     ],
-    "license": "gpl-2.0-or-later",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
+            "name": "Syde GmbH",
+            "homepage": "https://syde.com/",
+            "email": "hello@syde.com",
+            "role": "Company"
+        },
+        {
             "name": "David Naber",
-            "email": "d.naber@inpsyde.com",
+            "email": "d.naber@syde.com",
             "role": "Developer"
         }
     ],
